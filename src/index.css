@@ -1,0 +1,228 @@
+﻿:root {
+  /* Exact Five Primary Brand Colours */
+  --color-soft-blush: #FFDBDA;
+  --color-old-rose: #DB7F8E;
+  --color-pale-slate: #D5C5C8;
+  --color-cool-steel: #9DA3A4;
+  --color-taupe-grey: #604D53;
+
+  /* Helper RGB channels for soft tints */
+  --color-soft-blush-rgb: 255, 219, 218;
+  --color-old-rose-rgb: 219, 127, 142;
+  --color-pale-slate-rgb: 213, 197, 200;
+  --color-cool-steel-rgb: 157, 163, 164;
+  --color-taupe-grey-rgb: 96, 77, 83;
+
+  /* Typography */
+  --font-display: 'Syne', Georgia, serif;
+  --font-body: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+
+  /* Elevation & Borders */
+  --border-retro: 2px solid var(--color-taupe-grey);
+  --border-dashed: 2px dashed var(--color-taupe-grey);
+  --border-subtle: 1px solid rgba(var(--color-taupe-grey-rgb), 0.25);
+  --shadow-retro: 4px 4px 0px var(--color-taupe-grey);
+  --shadow-retro-hover: 6px 6px 0px var(--color-taupe-grey);
+  --shadow-retro-pressed: 1px 1px 0px var(--color-taupe-grey);
+  --shadow-soft: 0 10px 25px -5px rgba(var(--color-taupe-grey-rgb), 0.15);
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+  --radius-full: 9999px;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+  background-color: var(--color-soft-blush);
+  color: var(--color-taupe-grey);
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-soft-blush);
+  color: var(--color-taupe-grey);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Expressive Headings */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  color: var(--color-taupe-grey);
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+p {
+  color: var(--color-taupe-grey);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+input, textarea, select {
+  font-family: inherit;
+  color: inherit;
+}
+
+/* Subtle Retro Y2K Background Texture */
+.bg-grain {
+  background-image: radial-gradient(rgba(var(--color-taupe-grey-rgb), 0.08) 1px, transparent 1px);
+  background-size: 18px 18px;
+}
+
+/* Reusable Retro UI Utilities */
+.retro-box {
+  background-color: var(--color-pale-slate);
+  border: var(--border-retro);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-retro);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.retro-box:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-retro-hover);
+}
+
+.retro-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background-color: var(--color-old-rose);
+  color: var(--color-soft-blush);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  border: var(--border-retro);
+  border-radius: var(--radius-full);
+  box-shadow: var(--shadow-retro);
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+}
+
+.retro-btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-retro-hover);
+  background-color: #c96e7d;
+}
+
+.retro-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: var(--shadow-retro-pressed);
+}
+
+.retro-btn-secondary {
+  background-color: var(--color-pale-slate);
+  color: var(--color-taupe-grey);
+}
+
+.retro-btn-secondary:hover {
+  background-color: #c9b7ba;
+  color: var(--color-taupe-grey);
+}
+
+.retro-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  border: 1.5px solid var(--color-taupe-grey);
+  border-radius: var(--radius-full);
+  background-color: var(--color-soft-blush);
+  color: var(--color-taupe-grey);
+  box-shadow: 2px 2px 0px var(--color-taupe-grey);
+}
+
+/* Sparkle & Floating Keyframe Animations */
+@keyframes sparkle-twinkle {
+  0%, 100% {
+    transform: scale(0.8) rotate(0deg);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1.2) rotate(45deg);
+    opacity: 1;
+  }
+}
+
+@keyframes gentle-float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes pulse-subtle {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.75;
+    transform: scale(0.96);
+  }
+}
+
+.animate-sparkle {
+  display: inline-block;
+  animation: sparkle-twinkle 2.8s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: gentle-float 4s ease-in-out infinite;
+}
+
+/* Accessibility Focus Ring */
+:focus-visible {
+  outline: 3px solid var(--color-old-rose);
+  outline-offset: 2px;
+}
+
+/* Custom Scrollbar in Brand Palette */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-soft-blush);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-pale-slate);
+  border: 2px solid var(--color-taupe-grey);
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-old-rose);
+}
