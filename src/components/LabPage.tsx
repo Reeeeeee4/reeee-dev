@@ -1,4 +1,4 @@
-﻿import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { ArrowLeft, Sparkles, Paintbrush, Eraser, Download, Trash2, Music, Type, Wand2, Play, Copy, Check } from 'lucide-react';
 import { soundEngine } from '../utils/audio';
 
@@ -53,6 +53,21 @@ export const LabPage: React.FC<LabPageProps> = ({ onBackToHome }) => {
     setPixels(updated);
   };
 
+  const handlePixelTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (e.touches.length === 0) return;
+    const touch = e.touches[0];
+    const target = document.elementFromPoint(touch.clientX, touch.clientY) as HTMLElement | null;
+    if (target && target.dataset && target.dataset.pixelIndex !== undefined) {
+      const idx = parseInt(target.dataset.pixelIndex, 10);
+      if (!isNaN(idx) && pixels[idx] !== (isEraser ? '#FFDBDA' : currentColor)) {
+        soundEngine.playClick(isEraser ? 400 : 700 + (idx % 16) * 20, 0.02);
+        const updated = [...pixels];
+        updated[idx] = isEraser ? '#FFDBDA' : currentColor;
+        setPixels(updated);
+      }
+    }
+  };
+
   const clearCanvas = () => {
     soundEngine.playClick(350, 0.06);
     setPixels(Array(GRID_SIZE * GRID_SIZE).fill('#FFDBDA'));
@@ -96,11 +111,11 @@ export const LabPage: React.FC<LabPageProps> = ({ onBackToHome }) => {
   ];
   const [activeChimeIdx, setActiveChimeIdx] = useState<number | null>(null);
 
-  const playChimeNote = (freq: number, idx: number) => {
+  const playChimeNote = useCallback((freq: number, idx: number) => {
     soundEngine.playChime(freq, 0.6);
     setActiveChimeIdx(idx);
     setTimeout(() => setActiveChimeIdx(null), 300);
-  };
+  }, []);
 
   const playSequence = (pattern: number[]) => {
     pattern.forEach((noteIdx, i) => {
@@ -111,6 +126,24 @@ export const LabPage: React.FC<LabPageProps> = ({ onBackToHome }) => {
       }, i * 190);
     });
   };
+
+  // Enable keyboard keys 1-8 to trigger chimes
+  useEffect(() => {
+    if (activeTab !== 'chimes') return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+      const keyNum = parseInt(e.key, 10);
+      if (keyNum >= 1 && keyNum <= 8) {
+        const idx = keyNum - 1;
+        if (CHIMES[idx]) {
+          e.preventDefault();
+          playChimeNote(CHIMES[idx].freq, idx);
+        }
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [activeTab, playChimeNote]);
 
   // ==========================================
   // MINI-APP 3: ASCII & Y2K TEXT STYLER
@@ -251,14 +284,20 @@ export const LabPage: React.FC<LabPageProps> = ({ onBackToHome }) => {
     return () => cancelAnimationFrame(animId);
   }, [activeTab]);
 
+  const handleCanvasTouch = (e: React.TouchEvent<HTMLCanvasElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const scaleX = 700 / rect.width;
+    const scaleY = 350 / rect.height;
+    for (let i = 0; i < e.touches.length; i++) {
+      const t = e.touches[i];
+      addSparkle((t.clientX - rect.left) * scaleX, (t.clientY - rect.top) * scaleY);
+    }
+  };
+
   return (
-    <div style={{
-      maxWidth: '1200px',
-      margin: '0 auto',
-      padding: '30px 20px 80px',
-    }}>
+    <div className="lab-container">
       {/* Top Back Navigation Bar */}
-      <div style={{ marginBottom: '20px' }}>
+      <div style={{ marginBottom: '16px' }}>
         <button
           onClick={() => {
             soundEngine.playClick(600, 0.04);
@@ -270,47 +309,41 @@ export const LabPage: React.FC<LabPageProps> = ({ onBackToHome }) => {
           }}
           className="retro-btn retro-btn-secondary"
           style={{
-            padding: '8px 16px',
-            fontSize: '0.85rem',
+            padding: '7px 14px',
+            fontSize: '0.82rem',
             display: 'inline-flex',
             alignItems: 'center',
-            gap: '8px',
+            gap: '6px',
           }}
           title="Return to Home Portfolio"
         >
-          <ArrowLeft size={16} />
+          <ArrowLeft size={15} />
           <span>Back to Portfolio</span>
         </button>
       </div>
 
       {/* Lab Header */}
-      <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+      <div style={{ textAlign: 'center', marginBottom: '28px' }}>
         <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}>
           <span className="retro-pill">
             <Sparkles size={12} color="var(--color-old-rose)" /> Creative Coding Playground
           </span>
         </div>
-        <h1 style={{ fontSize: 'clamp(2.1rem, 4.5vw, 3.2rem)', marginBottom: '10px' }}>
+        <h1 style={{ fontSize: 'clamp(1.8rem, 4.5vw, 3.2rem)', marginBottom: '8px' }}>
           reeee.dev Creative Lab
         </h1>
-        <p style={{ maxWidth: '600px', margin: '0 auto', color: 'var(--color-taupe-grey)', fontSize: '1.05rem' }}>
+        <p style={{ maxWidth: '600px', margin: '0 auto', color: 'var(--color-taupe-grey)', fontSize: 'clamp(0.9rem, 2vw, 1.05rem)', lineHeight: 1.5 }}>
           Interactive web experiments, real-time sound synthesizers, and procedural canvas toys crafted in TypeScript.
         </p>
       </div>
 
       {/* Lab Sub-Nav Navigation */}
-      <div style={{
-        display: 'flex',
-        flexWrap: 'wrap',
-        justifyContent: 'center',
-        gap: '8px',
-        marginBottom: '32px',
-      }}>
+      <div className="lab-subnav-grid">
         {[
-          { id: 'pixel', label: '1. Retro Pixel Studio', icon: Paintbrush },
-          { id: 'chimes', label: '2. Melody Chime Box', icon: Music },
-          { id: 'ascii', label: '3. ASCII & Y2K Styler', icon: Type },
-          { id: 'physics', label: '4. Sparkle Gravity Toy', icon: Wand2 },
+          { id: 'pixel', label: '1. Retro Pixel Studio', shortLabel: 'Pixel Studio', icon: Paintbrush },
+          { id: 'chimes', label: '2. Melody Chime Box', shortLabel: 'Chime Box', icon: Music },
+          { id: 'ascii', label: '3. ASCII & Y2K Styler', shortLabel: 'ASCII Styler', icon: Type },
+          { id: 'physics', label: '4. Sparkle Gravity Toy', shortLabel: 'Gravity Toy', icon: Wand2 },
         ].map((item) => {
           const isActive = activeTab === item.id;
           const Icon = item.icon;
@@ -321,14 +354,14 @@ export const LabPage: React.FC<LabPageProps> = ({ onBackToHome }) => {
                 soundEngine.playClick(750, 0.04);
                 setActiveTab(item.id as typeof activeTab);
               }}
+              className="lab-tab-btn"
               style={{
                 fontFamily: 'var(--font-display)',
                 fontWeight: 700,
-                fontSize: '0.88rem',
                 display: 'inline-flex',
                 alignItems: 'center',
+                justifyContent: 'center',
                 gap: '8px',
-                padding: '8px 16px',
                 borderRadius: 'var(--radius-full)',
                 border: '2px solid var(--color-taupe-grey)',
                 backgroundColor: isActive ? 'var(--color-old-rose)' : 'var(--color-pale-slate)',
@@ -339,7 +372,8 @@ export const LabPage: React.FC<LabPageProps> = ({ onBackToHome }) => {
               }}
             >
               <Icon size={15} />
-              <span>{item.label}</span>
+              <span className="lab-tab-label-full">{item.label}</span>
+              <span className="lab-tab-label-short">{item.shortLabel}</span>
             </button>
           );
         })}
@@ -347,25 +381,20 @@ export const LabPage: React.FC<LabPageProps> = ({ onBackToHome }) => {
 
       {/* 1. RETRO PIXEL CANVAS TAB */}
       {activeTab === 'pixel' && (
-        <div className="retro-box" style={{
-          backgroundColor: 'var(--color-pale-slate)',
-          padding: '24px',
-          maxWidth: '780px',
-          margin: '0 auto',
-        }}>
-          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '16px', marginBottom: '20px' }}>
+        <div className="lab-card">
+          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '12px', marginBottom: '16px' }}>
             <div>
-              <h2 style={{ fontSize: '1.4rem', marginBottom: '4px' }}>16×16 Palette Pixel Canvas</h2>
-              <p style={{ fontSize: '0.88rem', color: 'var(--color-taupe-grey)' }}>
+              <h2 style={{ fontSize: 'clamp(1.2rem, 3vw, 1.4rem)', marginBottom: '4px' }}>16×16 Palette Pixel Canvas</h2>
+              <p style={{ fontSize: '0.85rem', color: 'var(--color-taupe-grey)' }}>
                 Draw retro icons and avatars using the official reeee.dev palette. Export as a crisp PNG!
               </p>
             </div>
 
-            <div style={{ display: 'flex', gap: '8px' }}>
+            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
               <button
                 onClick={clearCanvas}
                 className="retro-btn retro-btn-secondary"
-                style={{ padding: '6px 12px', fontSize: '0.82rem' }}
+                style={{ padding: '6px 12px', fontSize: '0.8rem' }}
                 title="Clear canvas"
               >
                 <Trash2 size={14} /> Clear
@@ -373,7 +402,7 @@ export const LabPage: React.FC<LabPageProps> = ({ onBackToHome }) => {
               <button
                 onClick={exportPNG}
                 className="retro-btn"
-                style={{ padding: '6px 14px', fontSize: '0.82rem' }}
+                style={{ padding: '6px 12px', fontSize: '0.8rem' }}
                 title="Download PNG image"
               >
                 <Download size={14} /> Export PNG
@@ -386,15 +415,15 @@ export const LabPage: React.FC<LabPageProps> = ({ onBackToHome }) => {
             flexWrap: 'wrap',
             alignItems: 'center',
             justifyContent: 'space-between',
-            gap: '12px',
-            padding: '12px 14px',
+            gap: '10px',
+            padding: '10px 12px',
             backgroundColor: 'var(--color-soft-blush)',
             borderRadius: 'var(--radius-md)',
             border: '2px solid var(--color-taupe-grey)',
-            marginBottom: '20px',
+            marginBottom: '16px',
           }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span style={{ fontSize: '0.78rem', fontFamily: 'var(--font-mono)', fontWeight: 700, marginRight: '4px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
+              <span style={{ fontSize: '0.75rem', fontFamily: 'var(--font-mono)', fontWeight: 700, marginRight: '2px' }}>
                 PALETTE:
               </span>
               {PALETTE.map((c) => (
@@ -409,10 +438,10 @@ export const LabPage: React.FC<LabPageProps> = ({ onBackToHome }) => {
                   style={{
                     width: '28px',
                     height: '28px',
-                    borderRadius: '8px',
+                    borderRadius: '7px',
                     backgroundColor: c.hex,
                     border: '2px solid var(--color-taupe-grey)',
-                    boxShadow: currentColor === c.hex && !isEraser ? '0 0 0 3px var(--color-old-rose)' : '2px 2px 0px var(--color-taupe-grey)',
+                    boxShadow: currentColor === c.hex && !isEraser ? '0 0 0 2.5px var(--color-old-rose)' : '1.5px 1.5px 0px var(--color-taupe-grey)',
                     transform: currentColor === c.hex && !isEraser ? 'scale(1.15)' : 'scale(1)',
                     cursor: 'pointer',
                     transition: 'transform 0.15s ease',
@@ -421,16 +450,16 @@ export const LabPage: React.FC<LabPageProps> = ({ onBackToHome }) => {
               ))}
             </div>
 
-            <div style={{ display: 'flex', gap: '8px' }}>
+            <div style={{ display: 'flex', gap: '6px' }}>
               <button
                 onClick={() => {
                   soundEngine.playClick(600, 0.03);
                   setIsEraser(false);
                 }}
                 className={`retro-btn ${!isEraser ? '' : 'retro-btn-secondary'}`}
-                style={{ padding: '6px 12px', fontSize: '0.8rem' }}
+                style={{ padding: '5px 10px', fontSize: '0.78rem' }}
               >
-                <Paintbrush size={14} /> Brush
+                <Paintbrush size={13} /> Brush
               </button>
               <button
                 onClick={() => {
@@ -438,9 +467,9 @@ export const LabPage: React.FC<LabPageProps> = ({ onBackToHome }) => {
                   setIsEraser(true);
                 }}
                 className={`retro-btn ${isEraser ? '' : 'retro-btn-secondary'}`}
-                style={{ padding: '6px 12px', fontSize: '0.8rem' }}
+                style={{ padding: '5px 10px', fontSize: '0.78rem' }}
               >
-                <Eraser size={14} /> Eraser
+                <Eraser size={13} /> Eraser
               </button>
             </div>
           </div>
@@ -449,16 +478,19 @@ export const LabPage: React.FC<LabPageProps> = ({ onBackToHome }) => {
             onMouseDown={() => setIsDrawing(true)}
             onMouseUp={() => setIsDrawing(false)}
             onMouseLeave={() => setIsDrawing(false)}
+            onTouchStart={() => setIsDrawing(true)}
+            onTouchEnd={() => setIsDrawing(false)}
+            onTouchMove={handlePixelTouchMove}
             style={{
               display: 'grid',
               gridTemplateColumns: `repeat(${GRID_SIZE}, 1fr)`,
               width: '100%',
-              maxWidth: '360px',
+              maxWidth: 'min(100%, 330px)',
               aspectRatio: '1 / 1',
               margin: '0 auto',
               border: '3px solid var(--color-taupe-grey)',
               borderRadius: 'var(--radius-sm)',
-              boxShadow: '5px 5px 0px var(--color-taupe-grey)',
+              boxShadow: '4px 4px 0px var(--color-taupe-grey)',
               backgroundColor: 'var(--color-taupe-grey)',
               gap: '1px',
               userSelect: 'none',
@@ -468,8 +500,10 @@ export const LabPage: React.FC<LabPageProps> = ({ onBackToHome }) => {
             {pixels.map((color, index) => (
               <div
                 key={index}
+                data-pixel-index={index}
                 onClick={() => handlePixelClick(index)}
                 onMouseEnter={() => handlePixelMouseEnter(index)}
+                onTouchStart={() => handlePixelClick(index)}
                 style={{
                   backgroundColor: color,
                   cursor: 'crosshair',
@@ -479,67 +513,58 @@ export const LabPage: React.FC<LabPageProps> = ({ onBackToHome }) => {
             ))}
           </div>
 
-          <div style={{ textAlign: 'center', marginTop: '14px', fontSize: '0.78rem', color: 'var(--color-taupe-grey)', fontFamily: 'var(--font-mono)' }}>
-            ✦ Click or drag to draw • Powered by HTML5 Canvas &amp; reeee.dev palette tokens
+          <div style={{ textAlign: 'center', marginTop: '12px', fontSize: '0.75rem', color: 'var(--color-taupe-grey)', fontFamily: 'var(--font-mono)' }}>
+            ✦ Tap or drag to draw • Powered by HTML5 Canvas &amp; palette tokens
           </div>
         </div>
       )}
 
       {/* 2. MELODY CHIME BOX TAB */}
       {activeTab === 'chimes' && (
-        <div className="retro-box" style={{
-          backgroundColor: 'var(--color-pale-slate)',
-          padding: '24px',
-          maxWidth: '780px',
-          margin: '0 auto',
-        }}>
-          <div style={{ textAlign: 'center', marginBottom: '24px' }}>
-            <h2 style={{ fontSize: '1.5rem', marginBottom: '6px' }}>Pentatonic Vintage Chime Box</h2>
-            <p style={{ fontSize: '0.9rem', color: 'var(--color-taupe-grey)' }}>
-              A nostalgic Web Audio synthesizer tuned to a soft pentatonic scale. Click keys or trigger preset melodies.
+        <div className="lab-card">
+          <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+            <h2 style={{ fontSize: 'clamp(1.25rem, 3.5vw, 1.5rem)', marginBottom: '6px' }}>
+              Pentatonic Vintage Chime Box
+            </h2>
+            <p style={{ fontSize: '0.88rem', color: 'var(--color-taupe-grey)', maxWidth: '540px', margin: '0 auto' }}>
+              A nostalgic Web Audio synthesizer tuned to a soft pentatonic scale. Tap chime keys, slide across, or trigger presets below.
             </p>
           </div>
 
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(8, 1fr)',
-            gap: '6px',
-            marginBottom: '28px',
-          }}>
+          {/* Responsive Chime Keys: 8 keys on desktop, 4x2 on mobile */}
+          <div className="chime-keys-grid">
             {CHIMES.map((chime, idx) => {
               const isHit = activeChimeIdx === idx;
               return (
                 <button
                   key={chime.label}
                   onClick={() => playChimeNote(chime.freq, idx)}
+                  onTouchStart={(e) => {
+                    e.preventDefault();
+                    playChimeNote(chime.freq, idx);
+                  }}
+                  className="chime-key-btn"
                   style={{
-                    height: '140px',
                     backgroundColor: isHit ? 'var(--color-old-rose)' : 'var(--color-soft-blush)',
                     color: isHit ? 'var(--color-soft-blush)' : 'var(--color-taupe-grey)',
-                    border: '2px solid var(--color-taupe-grey)',
-                    borderRadius: 'var(--radius-md)',
-                    boxShadow: isHit ? '1px 1px 0px var(--color-taupe-grey)' : '3px 4px 0px var(--color-taupe-grey)',
-                    transform: isHit ? 'translate(2px, 3px)' : 'none',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'space-between',
-                    padding: '10px 4px',
-                    cursor: 'pointer',
-                    transition: 'all 0.1s ease',
+                    boxShadow: isHit ? '1px 1px 0px var(--color-taupe-grey)' : '3px 3px 0px var(--color-taupe-grey)',
+                    transform: isHit ? 'translate(2px, 2px)' : 'none',
                   }}
+                  title={`Play Note ${chime.label} (Press ${chime.key})`}
                 >
-                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', fontWeight: 700 }}>
+                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.72rem', fontWeight: 700 }}>
                     [{chime.key}]
                   </span>
                   <div style={{
-                    width: '7px',
-                    height: '7px',
+                    width: '8px',
+                    height: '8px',
                     borderRadius: '50%',
-                    backgroundColor: 'var(--color-old-rose)',
+                    backgroundColor: isHit ? 'var(--color-soft-blush)' : 'var(--color-old-rose)',
                     margin: '0 auto',
-                    opacity: isHit ? 1 : 0.3,
+                    opacity: isHit ? 1 : 0.35,
+                    transition: 'all 0.1s ease',
                   }}></div>
-                  <span style={{ fontFamily: 'var(--font-display)', fontSize: '0.85rem', fontWeight: 800 }}>
+                  <span style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(0.82rem, 2.5vw, 0.95rem)', fontWeight: 800 }}>
                     {chime.label}
                   </span>
                 </button>
@@ -547,21 +572,27 @@ export const LabPage: React.FC<LabPageProps> = ({ onBackToHome }) => {
             })}
           </div>
 
-          <div style={{
-            padding: '14px 16px',
-            backgroundColor: 'var(--color-soft-blush)',
-            borderRadius: 'var(--radius-md)',
-            border: '2px solid var(--color-taupe-grey)',
+          {/* Quick Octave Label for Mobile 4x2 Clarity */}
+          <div className="chime-octave-hint" style={{
             display: 'flex',
-            flexWrap: 'wrap',
-            alignItems: 'center',
             justifyContent: 'space-between',
-            gap: '10px',
+            fontSize: '0.72rem',
+            fontFamily: 'var(--font-mono)',
+            color: 'var(--color-taupe-grey)',
+            opacity: 0.8,
+            marginBottom: '16px',
+            padding: '0 4px',
           }}>
-            <span style={{ fontSize: '0.82rem', fontFamily: 'var(--font-mono)', fontWeight: 700 }}>
+            <span>✦ Octave 4: C4, D4, E4, G4</span>
+            <span>✦ Octave 5: A4, C5, D5, E5</span>
+          </div>
+
+          {/* Auto Presets Bar */}
+          <div className="chime-presets-bar">
+            <span style={{ fontSize: '0.8rem', fontFamily: 'var(--font-mono)', fontWeight: 700 }}>
               AUTO PRESETS:
             </span>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+            <div className="chime-presets-buttons" style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
               <button
                 onClick={() => playSequence([0, 2, 4, 5, 7])}
                 className="retro-btn"
@@ -590,19 +621,14 @@ export const LabPage: React.FC<LabPageProps> = ({ onBackToHome }) => {
 
       {/* 3. ASCII & Y2K TEXT STYLER TAB */}
       {activeTab === 'ascii' && (
-        <div className="retro-box" style={{
-          backgroundColor: 'var(--color-pale-slate)',
-          padding: '24px',
-          maxWidth: '780px',
-          margin: '0 auto',
-        }}>
-          <h2 style={{ fontSize: '1.5rem', marginBottom: '4px' }}>Retro ASCII &amp; Y2K Text Styler</h2>
-          <p style={{ fontSize: '0.9rem', color: 'var(--color-taupe-grey)', marginBottom: '18px' }}>
+        <div className="lab-card">
+          <h2 style={{ fontSize: 'clamp(1.25rem, 3.5vw, 1.5rem)', marginBottom: '4px' }}>Retro ASCII &amp; Y2K Text Styler</h2>
+          <p style={{ fontSize: '0.88rem', color: 'var(--color-taupe-grey)', marginBottom: '16px' }}>
             Transform text into retro banner blocks and stylized Y2K typography with instant 1-click clipboard copy.
           </p>
 
-          <div style={{ marginBottom: '20px' }}>
-            <label style={{ display: 'block', fontSize: '0.8rem', fontFamily: 'var(--font-mono)', fontWeight: 700, marginBottom: '6px' }}>
+          <div style={{ marginBottom: '18px' }}>
+            <label style={{ display: 'block', fontSize: '0.78rem', fontFamily: 'var(--font-mono)', fontWeight: 700, marginBottom: '6px' }}>
               TYPE YOUR TEXT (MAX 12 CHARS):
             </label>
             <input
@@ -614,7 +640,7 @@ export const LabPage: React.FC<LabPageProps> = ({ onBackToHome }) => {
               style={{
                 width: '100%',
                 padding: '10px 14px',
-                fontSize: '1rem',
+                fontSize: '0.95rem',
                 fontFamily: 'var(--font-mono)',
                 backgroundColor: 'var(--color-soft-blush)',
                 border: '2px solid var(--color-taupe-grey)',
@@ -630,11 +656,11 @@ export const LabPage: React.FC<LabPageProps> = ({ onBackToHome }) => {
             color: 'var(--color-soft-blush)',
             borderRadius: 'var(--radius-md)',
             border: '2px solid var(--color-taupe-grey)',
-            padding: '16px',
-            marginBottom: '18px',
+            padding: '14px',
+            marginBottom: '16px',
             position: 'relative',
           }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', gap: '8px' }}>
               <span style={{ fontSize: '0.72rem', fontFamily: 'var(--font-mono)', color: 'var(--color-cool-steel)' }}>
                 ASCII BANNER BLOCK
               </span>
@@ -650,8 +676,10 @@ export const LabPage: React.FC<LabPageProps> = ({ onBackToHome }) => {
             <pre style={{
               margin: 0,
               fontFamily: 'var(--font-mono)',
-              fontSize: '0.82rem',
+              fontSize: 'clamp(0.55rem, 2.2vw, 0.82rem)',
               overflowX: 'auto',
+              WebkitOverflowScrolling: 'touch',
+              maxWidth: '100%',
               color: 'var(--color-soft-blush)',
               lineHeight: 1.4,
             }}>
@@ -659,7 +687,7 @@ export const LabPage: React.FC<LabPageProps> = ({ onBackToHome }) => {
             </pre>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '10px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '10px' }}>
             {[
               {
                 id: 'fullwidth',
@@ -698,7 +726,7 @@ export const LabPage: React.FC<LabPageProps> = ({ onBackToHome }) => {
                     {asciiCopied === st.id ? <Check size={14} color="#2b9348" /> : <Copy size={14} />}
                   </button>
                 </div>
-                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.9rem', fontWeight: 600 }}>
+                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.88rem', fontWeight: 600, wordBreak: 'break-all' }}>
                   {st.styled}
                 </div>
               </div>
@@ -709,17 +737,12 @@ export const LabPage: React.FC<LabPageProps> = ({ onBackToHome }) => {
 
       {/* 4. SPARKLE GRAVITY TAB */}
       {activeTab === 'physics' && (
-        <div className="retro-box" style={{
-          backgroundColor: 'var(--color-pale-slate)',
-          padding: '24px',
-          maxWidth: '780px',
-          margin: '0 auto',
-        }}>
-          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '16px', marginBottom: '18px' }}>
+        <div className="lab-card">
+          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '12px', marginBottom: '16px' }}>
             <div>
-              <h2 style={{ fontSize: '1.5rem', marginBottom: '4px' }}>Sparkle Gravity Physics Pad</h2>
-              <p style={{ fontSize: '0.88rem', color: 'var(--color-taupe-grey)' }}>
-                Click or drag across the interactive canvas to drop bouncy retro stars with velocity and restitution.
+              <h2 style={{ fontSize: 'clamp(1.25rem, 3.5vw, 1.5rem)', marginBottom: '4px' }}>Sparkle Gravity Physics Pad</h2>
+              <p style={{ fontSize: '0.85rem', color: 'var(--color-taupe-grey)' }}>
+                Tap or drag across the interactive canvas to drop bouncy retro stars with velocity and bounce.
               </p>
             </div>
 
@@ -729,7 +752,7 @@ export const LabPage: React.FC<LabPageProps> = ({ onBackToHome }) => {
                 particlesRef.current = [];
               }}
               className="retro-btn retro-btn-secondary"
-              style={{ padding: '6px 12px', fontSize: '0.82rem' }}
+              style={{ padding: '6px 12px', fontSize: '0.8rem' }}
             >
               <Trash2 size={14} /> Clear Canvas
             </button>
@@ -738,12 +761,13 @@ export const LabPage: React.FC<LabPageProps> = ({ onBackToHome }) => {
           <div style={{
             position: 'relative',
             width: '100%',
-            height: '350px',
+            height: 'clamp(260px, 45vh, 360px)',
             border: '2px solid var(--color-taupe-grey)',
             borderRadius: 'var(--radius-md)',
             boxShadow: '4px 4px 0px var(--color-taupe-grey)',
             overflow: 'hidden',
             cursor: 'pointer',
+            touchAction: 'none',
           }}>
             <canvas
               ref={canvasRef}
@@ -763,10 +787,13 @@ export const LabPage: React.FC<LabPageProps> = ({ onBackToHome }) => {
                   addSparkle((e.clientX - rect.left) * scaleX, (e.clientY - rect.top) * scaleY);
                 }
               }}
+              onTouchStart={handleCanvasTouch}
+              onTouchMove={handleCanvasTouch}
               style={{
                 width: '100%',
                 height: '100%',
                 display: 'block',
+                touchAction: 'none',
               }}
             />
 
@@ -774,7 +801,7 @@ export const LabPage: React.FC<LabPageProps> = ({ onBackToHome }) => {
               position: 'absolute',
               bottom: '10px',
               left: '10px',
-              backgroundColor: 'rgba(255, 219, 218, 0.9)',
+              backgroundColor: 'rgba(255, 219, 218, 0.92)',
               padding: '4px 10px',
               borderRadius: 'var(--radius-full)',
               border: '1px solid var(--color-taupe-grey)',
@@ -782,11 +809,148 @@ export const LabPage: React.FC<LabPageProps> = ({ onBackToHome }) => {
               fontFamily: 'var(--font-mono)',
               pointerEvents: 'none',
             }}>
-              Click or drag anywhere to drop sparkles ✦
+              Tap or drag anywhere to drop sparkles ✦
             </div>
           </div>
         </div>
       )}
+
+      {/* Embedded Responsive Styles for Creative Lab */}
+      <style>{`
+        .lab-container {
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 30px 20px 80px;
+        }
+
+        .lab-subnav-grid {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+          gap: 8px;
+          margin-bottom: 28px;
+        }
+
+        .lab-tab-btn {
+          padding: 8px 16px;
+          font-size: 0.88rem;
+        }
+
+        .lab-tab-label-short {
+          display: none;
+        }
+
+        .lab-tab-label-full {
+          display: inline;
+        }
+
+        .lab-card {
+          background-color: var(--color-pale-slate);
+          padding: 24px;
+          max-width: 780px;
+          margin: 0 auto;
+          border: var(--border-retro);
+          border-radius: var(--radius-md);
+          box-shadow: var(--shadow-retro);
+        }
+
+        /* Chime Keys Grid: 8 on desktop, 4x2 on mobile */
+        .chime-keys-grid {
+          display: grid;
+          grid-template-columns: repeat(8, 1fr);
+          gap: 8px;
+          margin-bottom: 20px;
+          width: 100%;
+        }
+
+        .chime-key-btn {
+          height: 140px;
+          border: 2px solid var(--color-taupe-grey);
+          border-radius: var(--radius-md);
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          padding: 10px 4px;
+          cursor: pointer;
+          transition: all 0.1s ease;
+          user-select: none;
+          touch-action: manipulation;
+        }
+
+        .chime-presets-bar {
+          padding: 14px 16px;
+          background-color: var(--color-soft-blush);
+          border-radius: var(--radius-md);
+          border: 2px solid var(--color-taupe-grey);
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          justify-content: space-between;
+          gap: 10px;
+        }
+
+        /* Mobile specific adjustments (<= 640px) */
+        @media (max-width: 640px) {
+          .lab-container {
+            padding: 20px 12px 60px;
+          }
+
+          .lab-subnav-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+            margin-bottom: 22px;
+          }
+
+          .lab-tab-btn {
+            padding: 8px 10px;
+            font-size: 0.78rem;
+            width: 100%;
+          }
+
+          .lab-tab-label-full {
+            display: none;
+          }
+
+          .lab-tab-label-short {
+            display: inline;
+          }
+
+          .lab-card {
+            padding: 16px 12px;
+          }
+
+          /* 4 columns x 2 rows for Chime keys on mobile */
+          .chime-keys-grid {
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-bottom: 16px;
+          }
+
+          .chime-key-btn {
+            height: 92px;
+            padding: 8px 4px;
+          }
+
+          .chime-presets-bar {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 10px;
+          }
+
+          .chime-presets-buttons {
+            display: grid !important;
+            grid-template-columns: 1fr;
+            gap: 6px;
+            width: 100%;
+          }
+
+          .chime-presets-buttons button {
+            width: 100%;
+            justify-content: center;
+          }
+        }
+      `}</style>
     </div>
   );
 };
