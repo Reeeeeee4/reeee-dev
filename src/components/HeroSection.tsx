@@ -78,7 +78,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigateToLab, onNav
   return (
     <section style={{
       position: 'relative',
-      padding: '40px 20px 60px',
+      padding: '44px 20px 64px',
       maxWidth: '1200px',
       margin: '0 auto',
       overflow: 'hidden',
@@ -98,7 +98,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigateToLab, onNav
       <div style={{
         display: 'grid',
         gridTemplateColumns: '1fr',
-        gap: '36px',
+        gap: '40px',
         alignItems: 'center',
       }} className="hero-grid">
         
@@ -128,28 +128,38 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigateToLab, onNav
             </span>
           </div>
 
-          {/* Big Headline */}
+          {/* Big Headline with Distinct Font Sizing */}
           <h1 style={{
-            fontSize: 'clamp(2.1rem, 4.8vw, 3.8rem)',
-            fontWeight: 800,
-            lineHeight: 1.12,
-            marginBottom: '18px',
+            lineHeight: 1.15,
+            marginBottom: '20px',
             color: 'var(--color-taupe-grey)',
             letterSpacing: '-0.03em',
           }}>
-            Code, creativity, and{' '}
             <span style={{
-              color: 'var(--color-old-rose)',
-              position: 'relative',
-              display: 'inline-block',
+              display: 'block',
+              fontSize: 'clamp(2.5rem, 5.6vw, 4.3rem)',
+              fontWeight: 800,
+              color: 'var(--color-taupe-grey)',
+              lineHeight: 1.1,
+              marginBottom: '6px',
             }}>
-              everything in between.
+              Code, creativity,
+            </span>
+            <span style={{
+              display: 'block',
+              fontSize: 'clamp(1.45rem, 3.2vw, 2.3rem)',
+              fontWeight: 700,
+              color: 'var(--color-old-rose)',
+              letterSpacing: '-0.02em',
+              lineHeight: 1.25,
+            }}>
+              and everything in between.
             </span>
           </h1>
 
           {/* Short Bio */}
           <p style={{
-            fontSize: 'clamp(1rem, 2vw, 1.15rem)',
+            fontSize: 'clamp(1rem, 2vw, 1.12rem)',
             lineHeight: 1.65,
             color: 'var(--color-taupe-grey)',
             maxWidth: '580px',
@@ -158,7 +168,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigateToLab, onNav
             Just a developer who enjoys building useful things and exploring what the web can do. At <strong style={{ color: 'var(--color-taupe-grey)' }}>reeee.dev</strong>, I share my projects, experiments, and the ideas I bring to life through code.
           </p>
 
-          {/* Call to Action Buttons: Mobile layout (2 top, 1 bottom middle) */}
+          {/* Call to Action Buttons */}
           <div className="hero-cta-group">
             <button
               onClick={() => {
@@ -179,7 +189,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigateToLab, onNav
               className="retro-btn retro-btn-secondary hero-cta-btn-2"
             >
               <Sparkles size={16} color="var(--color-old-rose)" />
-              <span>Creative Lab 🧪</span>
+              <span>Creative Lab</span>
             </button>
 
             <button
@@ -334,17 +344,28 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigateToLab, onNav
 
       {/* Responsive Styles */}
       <style>{`
-        /* Desktop Default */
+        /* Desktop: Buttons aligned in the same single column */
         .hero-cta-group {
           display: flex;
-          flex-wrap: wrap;
+          flex-direction: column;
+          align-items: flex-start;
           gap: 12px;
           margin-bottom: 28px;
+        }
+
+        .hero-cta-btn-1,
+        .hero-cta-btn-2,
+        .hero-cta-btn-3 {
+          width: auto;
+          min-width: 200px;
+          justify-content: flex-start;
+          padding: 10px 20px !important;
         }
 
         .hero-badges-group {
           display: flex;
           flex-wrap: wrap;
+          align-items: center;
           gap: 10px;
         }
 
@@ -358,23 +379,28 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigateToLab, onNav
           }
         }
 
-        /* Mobile Layout: 2 buttons on top, 1 button centered at bottom */
+        /* Mobile Layout: 2 buttons on top, 1 centered button on bottom */
         @media (max-width: 640px) {
           .hero-cta-group {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 10px;
             margin-bottom: 24px;
+            width: 100%;
           }
 
           .hero-cta-btn-1 {
             grid-column: 1;
+            min-width: unset;
+            justify-content: center;
             padding: 10px 12px !important;
             font-size: 0.88rem !important;
           }
 
           .hero-cta-btn-2 {
             grid-column: 2;
+            min-width: unset;
+            justify-content: center;
             padding: 10px 12px !important;
             font-size: 0.88rem !important;
           }
@@ -384,16 +410,19 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigateToLab, onNav
             justify-self: center;
             width: 100%;
             max-width: 320px;
+            justify-content: center;
             padding: 10px 16px !important;
             font-size: 0.88rem !important;
           }
 
+          /* Mobile Badges: Clean, left-aligned matching the headline and text flow */
           .hero-badges-group {
             display: flex;
             flex-direction: row;
             flex-wrap: wrap;
-            justify-content: center;
+            justify-content: flex-start;
             gap: 8px;
+            width: 100%;
           }
 
           .hero-badge-item {

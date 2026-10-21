@@ -21,7 +21,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, onNavigate }) => {
     { id: 'projects', label: 'Projects' },
     { id: 'skills', label: 'IT Skills' },
     { id: 'experience', label: 'Experience' },
-    { id: 'lab', label: 'Creative Lab 🧪' },
+    { id: 'lab', label: 'Creative Lab' },
     { id: 'contact', label: 'Contact' },
   ];
 

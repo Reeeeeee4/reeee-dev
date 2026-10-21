@@ -74,7 +74,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
 
           {/* Quick Links */}
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', alignItems: 'center' }}>
-            {['Home', 'Projects', 'IT Skills', 'Experience', 'Creative Lab 🧪', 'Contact'].map((item) => {
+            {['Home', 'Projects', 'IT Skills', 'Experience', 'Creative Lab', 'Contact'].map((item) => {
               const id = item.toLowerCase().replace(/[^a-z]/g, '');
               const targetId = id.includes('creative') ? 'lab' : id.includes('itskills') ? 'skills' : id;
               return (
