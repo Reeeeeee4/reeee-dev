@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowRight, Copy, Check, Sparkles, Terminal as TerminalIcon, Cloud, Shield, Heart } from 'lucide-react';
+import { ArrowRight, Copy, Check, Sparkles, Terminal as TerminalIcon, Cloud } from 'lucide-react';
 import { PORTFOLIO_INFO } from '../data/portfolioData';
 import { soundEngine } from '../utils/audio';
 
