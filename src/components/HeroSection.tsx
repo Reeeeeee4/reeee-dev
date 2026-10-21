@@ -165,7 +165,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigateToLab, onNav
             maxWidth: '580px',
             marginBottom: '28px',
           }}>
-            Just a developer who enjoys building useful things and exploring what the web can do. At <strong style={{ color: 'var(--color-taupe-grey)' }}>reeee.dev</strong>, I share my projects, experiments, and the ideas I bring to life through code. :D
+            Just a developer who enjoys building useful things and exploring what the web can do. At <strong style={{ color: 'var(--color-taupe-grey)' }}>reeee.dev</strong>, I share my projects, experiments, and the ideas I bring to life through code :D
           </p>
 
           {/* Call to Action Buttons */}
