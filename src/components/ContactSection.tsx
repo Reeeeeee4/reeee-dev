@@ -142,7 +142,7 @@ export const ContactSection: React.FC = () => {
             fontFamily: 'var(--font-mono)',
             color: 'var(--color-taupe-grey)',
           }}>
-            ☁️ <strong>Hosting Strategy:</strong> Engineered for seamless deployment to Cloudflare Pages free tier with zero cold-starts.
+            ☁️ <strong>By The Way:</strong> Have I told you my name yet? No? Nevermind.
           </div>
 
         </div>

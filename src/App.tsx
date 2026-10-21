@@ -8,6 +8,8 @@ import { ContactSection } from './components/ContactSection';
 import { LabPage } from './components/LabPage';
 import { Footer } from './components/Footer';
 import { MarqueeBanner } from './components/MarqueeBanner';
+import { Y2KBackground } from './components/Y2KBackground';
+import { fairyDustCursor } from 'cursor-effects';
 
 export const App: React.FC = () => {
   // Read initial path to support direct loading of /creative-lab
@@ -37,6 +39,27 @@ export const App: React.FC = () => {
 
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  // Tim Holman's 90s/Y2K Fairy Dust Cursor Effect
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    // Check if user has fine pointer device (mouse / trackpad)
+    const hasPointer = window.matchMedia('(pointer: fine)').matches;
+    if (!hasPointer) return;
+
+    try {
+      const cursor = fairyDustCursor({
+        colors: ['#DB7F8E', '#604D53', '#9DA3A4', '#FFDBDA', '#ffffff'],
+      });
+
+      return () => {
+        cursor?.destroy?.();
+      };
+    } catch (e) {
+      console.warn('Fairy dust cursor effect initialization skipped:', e);
+    }
   }, []);
 
   const navigateTo = (tab: string) => {
@@ -71,12 +94,15 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="bg-grain" style={{ width: '100%', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <div className="bg-grain" style={{ width: '100%', minHeight: '100vh', display: 'flex', flexDirection: 'column', position: 'relative' }}>
+      {/* Y2K Ambient Vector Background Decorations */}
+      <Y2KBackground />
+
       {/* Sticky Navigation Header */}
       <Navbar activeTab={activeTab} onNavigate={navigateTo} />
 
       {/* Main Page Content */}
-      <main style={{ flex: 1 }}>
+      <main style={{ flex: 1, position: 'relative', zIndex: 1 }}>
         {activeTab === 'lab' ? (
           <LabPage onBackToHome={() => navigateTo('home')} />
         ) : (

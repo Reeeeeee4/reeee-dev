@@ -1,8 +1,18 @@
-﻿import React from 'react';
-import { Calendar, Briefcase, Sparkles, CheckCircle2 } from 'lucide-react';
+import React from 'react';
+import { Calendar, Briefcase, GraduationCap, Laptop, Sparkles, CheckCircle2 } from 'lucide-react';
 import { EXPERIENCES } from '../data/portfolioData';
 
 export const ExperienceSection: React.FC = () => {
+  const getCompanyIcon = (role: string, period: string) => {
+    if (role.toLowerCase().includes('diploma') || role.toLowerCase().includes('degree')) {
+      return <GraduationCap size={15} color="var(--color-old-rose)" />;
+    }
+    if (period.toLowerCase().includes('ongoing')) {
+      return <Laptop size={15} color="var(--color-old-rose)" />;
+    }
+    return <Briefcase size={15} color="var(--color-old-rose)" />;
+  };
+
   return (
     <section id="experience" style={{
       padding: '64px 24px',
@@ -13,14 +23,14 @@ export const ExperienceSection: React.FC = () => {
       <div style={{ textAlign: 'center', marginBottom: '44px' }}>
         <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}>
           <span className="retro-pill">
-            <Sparkles size={12} color="var(--color-old-rose)" /> Career &amp; Milestones
+            <Sparkles size={12} color="var(--color-old-rose)" /> Career &amp; Education
           </span>
         </div>
         <h2 style={{ fontSize: 'clamp(2rem, 4vw, 2.8rem)', marginBottom: '12px' }}>
-          Experience &amp; Track Record
+          Experience &amp; Education
         </h2>
-        <p style={{ maxWidth: '580px', margin: '0 auto', color: 'var(--color-taupe-grey)', fontSize: '1.05rem' }}>
-          Real-world systems administration, infrastructure migrations, and production web application deployments.
+        <p style={{ maxWidth: '640px', margin: '0 auto', color: 'var(--color-taupe-grey)', fontSize: '1.05rem', lineHeight: 1.6 }}>
+          My journey in computer science and web development, from academic foundations to hands-on industry experience and independent projects.
         </p>
       </div>
 
@@ -47,7 +57,7 @@ export const ExperienceSection: React.FC = () => {
               flexWrap: 'wrap',
               alignItems: 'center',
               justifyContent: 'space-between',
-              gap: '10px',
+              gap: '12px',
               marginBottom: '14px',
             }}>
               <div>
@@ -59,7 +69,7 @@ export const ExperienceSection: React.FC = () => {
                   <Calendar size={12} />
                   {exp.period}
                 </span>
-                <h3 style={{ fontSize: '1.35rem', color: 'var(--color-taupe-grey)' }}>
+                <h3 style={{ fontSize: '1.35rem', color: 'var(--color-taupe-grey)', marginTop: '4px' }}>
                   {exp.role}
                 </h3>
               </div>
@@ -67,7 +77,7 @@ export const ExperienceSection: React.FC = () => {
               <div style={{
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: '6px',
+                gap: '8px',
                 fontFamily: 'var(--font-mono)',
                 fontSize: '0.88rem',
                 fontWeight: 700,
@@ -77,7 +87,7 @@ export const ExperienceSection: React.FC = () => {
                 borderRadius: 'var(--radius-sm)',
                 border: '1.5px solid var(--color-taupe-grey)',
               }}>
-                <Briefcase size={14} color="var(--color-old-rose)" />
+                {getCompanyIcon(exp.role, exp.period)}
                 {exp.company}
               </div>
             </div>
@@ -86,7 +96,7 @@ export const ExperienceSection: React.FC = () => {
               {exp.description}
             </p>
 
-            {/* Key Achievements */}
+            {/* Key Achievements / Areas of Study */}
             <div style={{ marginBottom: '20px' }}>
               <span style={{
                 display: 'block',
@@ -94,15 +104,16 @@ export const ExperienceSection: React.FC = () => {
                 fontFamily: 'var(--font-mono)',
                 fontWeight: 700,
                 color: 'var(--color-taupe-grey)',
-                marginBottom: '8px',
+                marginBottom: '10px',
+                letterSpacing: '0.5px',
               }}>
-                KEY IMPACTS:
+                {exp.highlightsLabel || 'KEY HIGHLIGHTS:'}
               </span>
               <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 {exp.achievements.map((item, i) => (
                   <li key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', fontSize: '0.9rem', color: 'var(--color-taupe-grey)' }}>
-                    <CheckCircle2 size={16} color="var(--color-old-rose)" style={{ flexShrink: 0, marginTop: '2px' }} />
-                    <span>{item}</span>
+                    <CheckCircle2 size={16} color="var(--color-old-rose)" style={{ flexShrink: 0, marginTop: '3px' }} />
+                    <span style={{ lineHeight: 1.5 }}>{item}</span>
                   </li>
                 ))}
               </ul>
@@ -113,7 +124,7 @@ export const ExperienceSection: React.FC = () => {
               display: 'flex',
               flexWrap: 'wrap',
               gap: '6px',
-              paddingTop: '14px',
+              paddingTop: '16px',
               borderTop: '1px solid rgba(96, 77, 83, 0.2)',
             }}>
               {exp.tech.map((t) => (
@@ -122,11 +133,12 @@ export const ExperienceSection: React.FC = () => {
                   style={{
                     fontSize: '0.75rem',
                     fontFamily: 'var(--font-mono)',
-                    padding: '2px 8px',
+                    padding: '3px 10px',
                     borderRadius: 'var(--radius-full)',
                     backgroundColor: 'var(--color-soft-blush)',
                     border: '1px solid var(--color-taupe-grey)',
                     color: 'var(--color-taupe-grey)',
+                    fontWeight: 600,
                   }}
                 >
                   {t}

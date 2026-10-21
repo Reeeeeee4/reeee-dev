@@ -25,6 +25,16 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigateToLab, onNav
     setTimeout(() => setCopied(false), 2400);
   };
 
+  const FORTUNES = [
+    "✨ It works on my machine, and now it works on Cloudflare too!",
+    "🔮 A clean git history brings inner peace.",
+    "⭐ 0 errors, 0 warnings: The prophecy has been fulfilled.",
+    "🐱 A cat has crossed your terminal. +100 charisma granted.",
+    "💾 Remember to commit often, drink water, and stretch.",
+    "🎨 Good design is making something intelligible and memorable.",
+    "🚀 May your builds be fast and your deploys zero-downtime.",
+  ];
+
   const executeCommand = (cmdToRun: string) => {
     soundEngine.playClick(850, 0.05);
     const trimmed = cmdToRun.trim().toLowerCase();
@@ -34,33 +44,101 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigateToLab, onNav
       case 'status':
       case 'sys-status':
       case 'reeee --status':
-        res = '🟢 ALL SYSTEMS OPTIMAL\n• Infrastructure: Edge CDN & Docker\n• DNS Resolution: 2.4ms avg\n• Memory Footprint: Lean (Zero Bloat)';
+        res = '🟢 ALL SYSTEMS OPTIMAL\n• Infrastructure: Edge CDN & Cloudflare\n• DNS Resolution: 2.4ms avg\n• Memory Footprint: Lean (Zero Bloat)';
         break;
+
+      case 'cat':
+      case 'kitty':
+      case 'meow':
+        res = `   /\\_/\\  \n  ( o.o )  meow! kernel purring smoothly...\n   > ^ <   [purr.sys status: 100% happy]\n           ฅ^•ﻌ•^ฅ`;
+        break;
+
+      case 'dog':
+      case 'woof':
+        res = `   / \\__\n  (    @\\___\n  /         O\n /   (_____/\n/_____/   U   *woof! good code puppy*`;
+        break;
+
+      case 'neofetch':
+      case 'fetch':
+        res = `    /\\_/\\        OS: reeee-os v2.0 (Y2K Edition)\n   ( ='.'= )     Host: Web Browser (Vite + React 19)\n   (")_(")       Kernel: 6.8.0-y2k-dream\n                 Uptime: 99999 mins\n                 Theme: Retro Soft Blush (#FFDBDA & #DB7F8E)\n                 Shell: reeee-bash\n                 Coffee Level: [████████░░] 80%`;
+        break;
+
+      case 'coffee':
+      case 'brew':
+        res = `      )  (  )\n     (   ) (\n   .-----------.\n   |  COFFEE   |==.\n   |  hot.exe  |  '\n   '-----------'--'\n    [==============[\n   *Fresh cup brewed! Energy restored to 100%.*`;
+        break;
+
+      case 'fortune':
+      case 'quote': {
+        const randomQuote = FORTUNES[Math.floor(Math.random() * FORTUNES.length)];
+        res = `🥠 Fortune Cookie:\n"${randomQuote}"`;
+        break;
+      }
+
+      case 'games':
+      case 'play':
+        res = `FEATURED PROJECTS & TOYS:\n🎮 Comfort Food — Godot Cozy Cooking Game\n🔮 Daily Horoscope Bot — Python Astro Engine\n👾 Rockoo — Interactive Game Prototype\n🕹️ First Game — Playable HTML5 on itch.io\n✨ Tip: Tap 'Creative Lab' in the top bar to explore interactive toys!`;
+        break;
+
+      case 'matrix':
+        res = `100101001011001010100101101\n011010010101011010101001010\n> Entering pink cyber matrix...\n> Wake up, visitor...\n> The terminal has you.`;
+        break;
+
+      case 'y2k':
+      case 'retro':
+        res = `  ★ ━━━━━━━━━━━━━━━━━━━━━━━━ ★\n     WELCOME TO THE YEAR 2000\n    Dial-up speed: 56.6 kbps\n    Aesthetic: High-Gloss Retro Chic\n    Status: Fully Y2K Bug Certified Clean\n  ★ ━━━━━━━━━━━━━━━━━━━━━━━━ ★`;
+        break;
+
+      case 'roll':
+      case 'dice': {
+        const roll = Math.floor(Math.random() * 20) + 1;
+        const msg = roll === 20 ? 'Critical success! ✨' : roll === 1 ? 'Critical fumble! 💥' : 'Nice roll!';
+        res = `🎲 Rolling D20...\nResult: [${roll}] — ${msg}`;
+        break;
+      }
+
+      case 'music':
+      case 'song':
+        res = `♪ ♫ ♬ Now Playing: "2000s Lo-Fi Dreamscape & Chiptune"\n[▶] 01:24 ━━━━━━━━━●───── 03:45`;
+        break;
+
+      case 'sudo':
+      case 'sudo rm -rf /':
+        res = `[sudo] password for visitor: *********\nPermission granted! You are now captain of this browser tab. 👑`;
+        break;
+
       case 'whoami':
         res = 'reeee.dev :: Developer who enjoys building useful things and exploring what the web can do.';
         break;
+
       case 'tech':
       case 'skills':
-        res = 'CORE STACK: [React 19, TypeScript, Vite, Linux/Bash, PowerShell, Cloudflare Workers, Docker, Vanilla CSS tokens]';
+        res = 'CORE STACK: [Python, PHP, JavaScript, C & Java, Laravel, WordPress, MySQL, Godot Engine, React, Vite]';
         break;
+
       case 'ping':
       case 'ping 8.8.8.8':
         res = '64 bytes from 8.8.8.8: icmp_seq=1 ttl=118 time=4.21 ms\n64 bytes from 8.8.8.8: icmp_seq=2 ttl=118 time=4.08 ms\n--- 0.0% packet loss ---';
         break;
+
       case 'email':
       case 'contact':
         res = `EMAIL: ${PORTFOLIO_INFO.email} (Ready for collaborations & projects)`;
         break;
+
       case 'palette':
         res = 'Active Palette: #FFDBDA (Soft Blush), #DB7F8E (Old Rose), #D5C5C8 (Pale Slate), #9DA3A4 (Cool Steel), #604D53 (Taupe Grey)';
         break;
+
       case 'clear':
         setTermHistory([]);
         setTermInput('');
         return;
+
       case 'help':
-        res = 'Available commands: status, whoami, skills, ping, email, palette, clear';
+        res = 'Available commands:\n• status    • cat       • neofetch  • coffee\n• fortune   • games     • y2k       • roll\n• music     • matrix    • sudo      • whoami\n• skills    • email     • palette   • clear';
         break;
+
       default:
         res = `Command not recognized: "${cmdToRun}". Type "help" or click command pills below.`;
     }
@@ -298,7 +376,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigateToLab, onNav
                 type="text"
                 value={termInput}
                 onChange={(e) => setTermInput(e.target.value)}
-                placeholder="type 'help', 'email', 'skills'..."
+                placeholder="type 'cat', 'help', 'neofetch', 'coffee'..."
                 style={{
                   flex: 1,
                   background: 'none',
@@ -325,7 +403,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigateToLab, onNav
             <span style={{ fontSize: '0.72rem', fontWeight: 700, fontFamily: 'var(--font-mono)', color: 'var(--color-taupe-grey)' }}>
               CMD:
             </span>
-            {['status', 'whoami', 'skills', 'email', 'palette', 'clear'].map((cmd) => (
+            {['status', 'cat', 'neofetch', 'fortune', 'coffee', 'games', 'y2k', 'roll', 'whoami', 'skills', 'clear'].map((cmd) => (
               <button
                 key={cmd}
                 onClick={() => executeCommand(cmd)}

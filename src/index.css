@@ -210,6 +210,61 @@ input, textarea, select {
   animation: gentle-float 4s ease-in-out infinite;
 }
 
+/* Y2K Background Icon Animations */
+@keyframes y2k-float-slow-kf {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-14px) rotate(4deg);
+  }
+}
+
+@keyframes y2k-shimmer-kf {
+  0%, 100% {
+    opacity: 0.22;
+    transform: scale(0.95);
+  }
+  50% {
+    opacity: 0.55;
+    transform: scale(1.08);
+  }
+}
+
+@keyframes y2k-drift-kf {
+  0%, 100% {
+    transform: translateY(0px) translateX(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-10px) translateX(6px) rotate(-5deg);
+  }
+}
+
+@keyframes y2k-spin-slow-kf {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.y2k-float-slow {
+  animation: y2k-float-slow-kf 6s ease-in-out infinite;
+}
+
+.y2k-shimmer {
+  animation: y2k-shimmer-kf 3.5s ease-in-out infinite;
+}
+
+.y2k-drift {
+  animation: y2k-drift-kf 7s ease-in-out infinite;
+}
+
+.y2k-spin-slow {
+  animation: y2k-spin-slow-kf 45s linear infinite;
+}
+
 /* Accessibility Focus Ring */
 :focus-visible {
   outline: 3px solid var(--color-old-rose);

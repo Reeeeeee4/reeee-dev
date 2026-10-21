@@ -33,6 +33,7 @@ export interface ExperienceItem {
   role: string;
   company: string;
   description: string;
+  highlightsLabel?: string;
   achievements: string[];
   tech: string[];
 }
@@ -190,39 +191,45 @@ export const SKILL_CATEGORIES: SkillCategory[] = [
 
 export const EXPERIENCES: ExperienceItem[] = [
   {
-    period: '2024 — Present',
-    role: 'IT Systems Specialist & Independent Web Engineer',
-    company: 'reeee.dev Lab',
-    description: 'Delivering end-to-end IT infrastructure consulting, custom web applications, and automated maintenance workflows for clients and creative ventures.',
+    period: 'Aug 2024 — May 2025',
+    role: 'IT Intern — Web Developer',
+    company: 'IT & Web Development Internship',
+    description: 'Gained hands-on experience in website development, application maintenance, and web hosting environments while working with established web technologies.',
+    highlightsLabel: 'KEY EXPERIENCE:',
     achievements: [
-      'Architected resilient Cloudflare Pages and Workers pipelines with 99.99% availability.',
-      'Developed custom telemetry and diagnostics dashboards saving clients over 15 hours of manual debugging weekly.',
-      'Authored automated PowerShell and Bash hygiene scripts across hybrid Windows/Linux server fleets.'
+      'Developed and maintained websites using WordPress and Laravel.',
+      'Worked with cPanel and web hosting tools to manage website environments.',
+      'Assisted with website updates, troubleshooting, and application maintenance.',
+      'Gained practical experience working with existing codebases and real-world development workflows.'
     ],
-    tech: ['React', 'TypeScript', 'Cloudflare', 'Linux', 'PowerShell', 'Docker']
+    tech: ['WordPress', 'Laravel', 'PHP', 'cPanel', 'MySQL']
   },
   {
     period: '2022 — 2024',
-    role: 'Systems & Infrastructure Support Engineer',
-    company: 'Enterprise IT Solutions',
-    description: 'Administered multi-site enterprise networks, managed directory services, and orchestrated workstation deployments and hardware diagnostics.',
+    role: 'Diploma in Computer Science',
+    company: 'MCKL College, Penang',
+    description: 'Built a foundation in computer science, programming, software development, and computational problem-solving through academic coursework and practical projects.',
+    highlightsLabel: 'KEY AREAS OF STUDY:',
     achievements: [
-      'Streamlined network onboarding with automated DHCP/DNS reservations and policy group configurations.',
-      'Enforced zero-trust identity policies and managed encrypted backup rotations.',
-      'Maintained 98.7% first-touch resolution rate on critical hardware and connectivity tickets.'
+      'Programming fundamentals and software development.',
+      'Data Structures and Algorithms.',
+      'Discrete Mathematics and Statistics.',
+      'Database concepts and computer science principles.'
     ],
-    tech: ['Windows Server', 'Active Directory', 'Networking', 'VLANs', 'Hardware', 'Bash']
+    tech: ['Computer Science', 'Programming', 'Algorithms', 'Database Fundamentals']
   },
   {
-    period: '2020 — 2022',
-    role: 'Junior Web Developer & Tech Technician',
-    company: 'Digital Studio Lab',
-    description: 'Created dynamic client web interfaces, configured web hosting environments, and built interactive creative tools.',
+    period: 'Ongoing',
+    role: 'Personal Projects & Independent Development',
+    company: 'Personal Development Lab',
+    description: 'Exploring technologies and building personal projects to strengthen programming skills, experiment with creative ideas, and apply technical knowledge beyond the classroom.',
+    highlightsLabel: 'PROJECT HIGHLIGHTS:',
     achievements: [
-      'Built responsive web interfaces with vanilla CSS and modern JavaScript.',
-      'Assisted in setting up Nginx web servers and automated Let\'s Encrypt SSL rotations.',
-      'Created custom interactive canvas toys and promotional mini-apps.'
+      'Developed software projects using different programming languages and tools.',
+      'Experimented with Python automation and bot development.',
+      'Created interactive game projects using the Godot Engine.',
+      'Used Git and GitHub to manage source code and showcase projects.'
     ],
-    tech: ['JavaScript', 'HTML5 Canvas', 'CSS3', 'Nginx', 'Git']
+    tech: ['Python', 'JavaScript', 'PHP', 'Git', 'GitHub', 'Godot Engine']
   }
 ];
