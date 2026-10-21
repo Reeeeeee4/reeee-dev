@@ -4,10 +4,10 @@ import { soundEngine } from '../utils/audio';
 
 interface NavbarProps {
   activeTab: string;
-  setActiveTab: (tab: string) => void;
+  onNavigate: (tab: string) => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
+export const Navbar: React.FC<NavbarProps> = ({ activeTab, onNavigate }) => {
   const [isMuted, setIsMuted] = useState(soundEngine.getMuted());
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -27,18 +27,8 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
 
   const handleNavClick = (id: string) => {
     soundEngine.playClick(750, 0.04);
-    setActiveTab(id);
+    onNavigate(id);
     setMobileMenuOpen(false);
-
-    // If navigating to a section on the home page
-    if (id !== 'lab') {
-      const el = document.getElementById(id);
-      if (el) {
-        el.scrollIntoView({ behavior: 'smooth' });
-      }
-    } else {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
   };
 
   return (
@@ -46,7 +36,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
       position: 'sticky',
       top: 0,
       zIndex: 100,
-      backgroundColor: 'rgba(255, 219, 218, 0.94)',
+      backgroundColor: 'rgba(255, 219, 218, 0.95)',
       backdropFilter: 'blur(10px)',
       borderBottom: '2px solid var(--color-taupe-grey)',
       boxShadow: '0 4px 12px rgba(96, 77, 83, 0.08)'
@@ -54,7 +44,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
       <div style={{
         maxWidth: '1200px',
         margin: '0 auto',
-        padding: '12px 24px',
+        padding: '10px 18px',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
@@ -70,8 +60,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
             background: 'none',
             border: 'none',
             cursor: 'pointer',
-            padding: '4px 8px',
-            borderRadius: 'var(--radius-sm)',
+            padding: '2px 4px',
           }}
           title="reeee.dev home"
         >
@@ -79,19 +68,19 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
             display: 'inline-flex',
             alignItems: 'center',
             justifyContent: 'center',
-            width: '32px',
-            height: '32px',
-            borderRadius: '10px',
+            width: '30px',
+            height: '30px',
+            borderRadius: '9px',
             backgroundColor: 'var(--color-old-rose)',
             color: 'var(--color-soft-blush)',
             border: '2px solid var(--color-taupe-grey)',
             boxShadow: '2px 2px 0px var(--color-taupe-grey)',
           }}>
-            <Sparkles size={18} className="animate-sparkle" />
+            <Sparkles size={16} className="animate-sparkle" />
           </span>
           <span style={{
             fontFamily: 'var(--font-display)',
-            fontSize: '1.45rem',
+            fontSize: '1.35rem',
             fontWeight: 800,
             letterSpacing: '-0.03em',
             color: 'var(--color-taupe-grey)',
@@ -104,7 +93,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
         <nav style={{
           display: 'none',
           alignItems: 'center',
-          gap: '8px',
+          gap: '6px',
         }} className="desktop-nav">
           {navItems.map((item) => {
             const isActive = activeTab === item.id;
@@ -115,8 +104,8 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
                 style={{
                   fontFamily: 'var(--font-display)',
                   fontWeight: 700,
-                  fontSize: '0.92rem',
-                  padding: '8px 14px',
+                  fontSize: '0.9rem',
+                  padding: '7px 13px',
                   borderRadius: 'var(--radius-full)',
                   border: isActive ? '2px solid var(--color-taupe-grey)' : '2px solid transparent',
                   backgroundColor: isActive ? 'var(--color-old-rose)' : 'transparent',
@@ -133,7 +122,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
         </nav>
 
         {/* Actions: Audio Toggle & Quick Status */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           {/* Sound Toggle */}
           <button
             onClick={toggleSound}
@@ -142,20 +131,20 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
             style={{
               display: 'inline-flex',
               alignItems: 'center',
-              gap: '6px',
-              padding: '6px 12px',
+              gap: '5px',
+              padding: '6px 10px',
               borderRadius: 'var(--radius-full)',
               backgroundColor: isMuted ? 'var(--color-pale-slate)' : 'var(--color-soft-blush)',
-              border: '2px solid var(--color-taupe-grey)',
+              border: '1.5px solid var(--color-taupe-grey)',
               boxShadow: '2px 2px 0px var(--color-taupe-grey)',
               color: 'var(--color-taupe-grey)',
-              fontSize: '0.8rem',
+              fontSize: '0.78rem',
               fontWeight: 600,
               cursor: 'pointer',
               transition: 'all 0.15s ease',
             }}
           >
-            {isMuted ? <VolumeX size={15} /> : <Volume2 size={15} color="var(--color-old-rose)" />}
+            {isMuted ? <VolumeX size={14} /> : <Volume2 size={14} color="var(--color-old-rose)" />}
             <span style={{ fontFamily: 'var(--font-mono)' }}>{isMuted ? 'Muted' : 'Sound ON'}</span>
           </button>
 
@@ -163,33 +152,34 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
           <button
             onClick={() => {
               handleNavClick('home');
-              const term = document.getElementById('hero-terminal');
-              if (term) term.scrollIntoView({ behavior: 'smooth' });
+              setTimeout(() => {
+                const term = document.getElementById('hero-terminal');
+                if (term) term.scrollIntoView({ behavior: 'smooth' });
+              }, 100);
             }}
             title="Jump to System Terminal"
             style={{
               display: 'inline-flex',
               alignItems: 'center',
               gap: '6px',
-              padding: '6px 12px',
+              padding: '6px 10px',
               borderRadius: 'var(--radius-full)',
               backgroundColor: 'var(--color-pale-slate)',
-              border: '2px solid var(--color-taupe-grey)',
+              border: '1.5px solid var(--color-taupe-grey)',
               boxShadow: '2px 2px 0px var(--color-taupe-grey)',
-              fontSize: '0.8rem',
+              fontSize: '0.78rem',
               fontWeight: 600,
               fontFamily: 'var(--font-mono)',
               cursor: 'pointer',
             }}
           >
-            <Terminal size={14} />
-            <span style={{ display: 'none' }} className="status-label-full">sys: ok</span>
+            <Terminal size={13} />
             <span style={{
-              width: '8px',
-              height: '8px',
+              width: '7px',
+              height: '7px',
               borderRadius: '50%',
               backgroundColor: '#52b788',
-              boxShadow: '0 0 6px #52b788'
+              boxShadow: '0 0 5px #52b788'
             }}></span>
           </button>
 
@@ -203,14 +193,14 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
               justifyContent: 'center',
               padding: '6px',
               borderRadius: 'var(--radius-sm)',
-              border: '2px solid var(--color-taupe-grey)',
+              border: '1.5px solid var(--color-taupe-grey)',
               backgroundColor: 'var(--color-pale-slate)',
               boxShadow: '2px 2px 0px var(--color-taupe-grey)',
               cursor: 'pointer',
             }}
             className="mobile-menu-btn"
           >
-            {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+            {mobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
           </button>
         </div>
       </div>
@@ -218,7 +208,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
       {/* Mobile Dropdown Menu */}
       {mobileMenuOpen && (
         <div style={{
-          padding: '16px 24px',
+          padding: '14px 18px',
           backgroundColor: 'var(--color-pale-slate)',
           borderTop: '2px solid var(--color-taupe-grey)',
           display: 'flex',
@@ -231,14 +221,15 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
               onClick={() => handleNavClick(item.id)}
               style={{
                 textAlign: 'left',
-                padding: '10px 14px',
+                padding: '9px 12px',
                 borderRadius: 'var(--radius-md)',
                 fontFamily: 'var(--font-display)',
                 fontWeight: 700,
-                fontSize: '1rem',
+                fontSize: '0.95rem',
                 border: activeTab === item.id ? '2px solid var(--color-taupe-grey)' : '1px solid rgba(96, 77, 83, 0.15)',
                 backgroundColor: activeTab === item.id ? 'var(--color-old-rose)' : 'var(--color-soft-blush)',
                 color: activeTab === item.id ? 'var(--color-soft-blush)' : 'var(--color-taupe-grey)',
+                cursor: 'pointer',
               }}
             >
               {item.label}
@@ -247,17 +238,14 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
         </div>
       )}
 
-      {/* Media query styling inline */}
+      {/* Media query styling */}
       <style>{`
-        @media (min-width: 768px) {
+        @media (min-width: 860px) {
           .desktop-nav {
             display: flex !important;
           }
           .mobile-menu-btn {
             display: none !important;
-          }
-          .status-label-full {
-            display: inline !important;
           }
         }
       `}</style>

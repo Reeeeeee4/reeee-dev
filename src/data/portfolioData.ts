@@ -35,13 +35,13 @@ export interface ExperienceItem {
 export const PORTFOLIO_INFO = {
   name: 'reeee.dev',
   wordmark: 'reeee.dev',
-  role: 'Systems IT Specialist & Full-Stack Creative Developer',
-  tagline: 'Bridging enterprise IT infrastructure with playful, romantic web engineering.',
-  status: 'Available for IT consulting & creative development',
+  role: 'Web Developer & Creative Technologist',
+  tagline: 'Code, creativity, and everything in between.',
+  status: 'Building useful things & exploring the web',
   location: 'Global Cloud / Remote',
-  email: 'hello@reeee.dev',
-  githubUrl: 'https://github.com',
-  bio: `Welcome to reeee.dev! I engineer resilient systems, automate cloud infrastructure, and craft delightful interactive digital spaces. My work merges modern web technologies (React, TypeScript, Node) with solid IT fundamentals (Linux, networking, virtualization, and zero-trust security).`,
+  email: 'limrenee0414@gmail.com',
+  githubUrl: 'https://github.com/Reeeeeee4',
+  bio: `Just a developer who enjoys building useful things and exploring what the web can do. At reeee.dev, I share my projects, experiments, and the ideas I bring to life through code.`,
 };
 
 export const PROJECTS: Project[] = [

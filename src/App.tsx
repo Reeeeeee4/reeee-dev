@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { Navbar } from './components/Navbar';
 import { HeroSection } from './components/HeroSection';
 import { ProjectsSection } from './components/ProjectsSection';
@@ -9,18 +9,62 @@ import { LabPage } from './components/LabPage';
 import { Footer } from './components/Footer';
 
 export const App: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<string>('home');
+  // Read initial path to support direct loading of /creative-lab
+  const getInitialTab = (): string => {
+    if (typeof window !== 'undefined') {
+      const path = window.location.pathname.toLowerCase();
+      if (path.includes('creative-lab') || path.includes('/lab')) {
+        return 'lab';
+      }
+    }
+    return 'home';
+  };
+
+  const [activeTab, setActiveTab] = useState<string>(getInitialTab);
+
+  // Listen to browser Back and Forward navigation buttons
+  useEffect(() => {
+    const handlePopState = () => {
+      const path = window.location.pathname.toLowerCase();
+      if (path.includes('creative-lab') || path.includes('/lab')) {
+        setActiveTab('lab');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        setActiveTab('home');
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   const navigateTo = (tab: string) => {
-    setActiveTab(tab);
     if (tab === 'lab') {
+      // Update browser URL to /creative-lab so Back button works
+      if (window.location.pathname !== '/creative-lab') {
+        window.history.pushState({ page: 'creative-lab' }, '', '/creative-lab');
+      }
+      setActiveTab('lab');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
-      const el = document.getElementById(tab);
-      if (el) {
-        el.scrollIntoView({ behavior: 'smooth' });
-      } else {
+      // If we were on /creative-lab, update URL back to /
+      if (window.location.pathname.includes('creative-lab') || window.location.pathname.includes('/lab')) {
+        window.history.pushState({ page: 'home' }, '', '/');
+      }
+      setActiveTab(tab);
+
+      if (tab === 'home') {
         window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        // If navigating to an anchor section
+        setTimeout(() => {
+          const el = document.getElementById(tab);
+          if (el) {
+            el.scrollIntoView({ behavior: 'smooth' });
+          } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }
+        }, 60);
       }
     }
   };
@@ -28,12 +72,12 @@ export const App: React.FC = () => {
   return (
     <div className="bg-grain" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       {/* Sticky Navigation Header */}
-      <Navbar activeTab={activeTab} setActiveTab={navigateTo} />
+      <Navbar activeTab={activeTab} onNavigate={navigateTo} />
 
       {/* Main Page Content */}
       <main style={{ flex: 1 }}>
         {activeTab === 'lab' ? (
-          <LabPage />
+          <LabPage onBackToHome={() => navigateTo('home')} />
         ) : (
           <>
             <div id="home">

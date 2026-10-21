@@ -1,8 +1,12 @@
 ﻿import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { Sparkles, Paintbrush, Eraser, Download, Trash2, Music, Type, Wand2, Play, Copy, Check } from 'lucide-react';
+import { ArrowLeft, Sparkles, Paintbrush, Eraser, Download, Trash2, Music, Type, Wand2, Play, Copy, Check } from 'lucide-react';
 import { soundEngine } from '../utils/audio';
 
-export const LabPage: React.FC = () => {
+interface LabPageProps {
+  onBackToHome?: () => void;
+}
+
+export const LabPage: React.FC<LabPageProps> = ({ onBackToHome }) => {
   const [activeTab, setActiveTab] = useState<'pixel' | 'chimes' | 'ascii' | 'physics'>('pixel');
 
   // ==========================================
@@ -23,7 +27,6 @@ export const LabPage: React.FC = () => {
   const [pixels, setPixels] = useState<string[]>(() => {
     // Default cute heart / star pixel art in center
     const arr = Array(GRID_SIZE * GRID_SIZE).fill('#FFDBDA');
-    // Pre-paint a cute retro heart
     const heartIndices = [
       GRID_SIZE * 5 + 6, GRID_SIZE * 5 + 7, GRID_SIZE * 5 + 9, GRID_SIZE * 5 + 10,
       GRID_SIZE * 6 + 5, GRID_SIZE * 6 + 6, GRID_SIZE * 6 + 7, GRID_SIZE * 6 + 8, GRID_SIZE * 6 + 9, GRID_SIZE * 6 + 10, GRID_SIZE * 6 + 11,
@@ -178,7 +181,6 @@ export const LabPage: React.FC = () => {
       ctx.fillStyle = '#FFDBDA';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Draw subtle grid
       ctx.strokeStyle = 'rgba(96, 77, 83, 0.1)';
       ctx.lineWidth = 1;
       for (let x = 0; x < canvas.width; x += 30) {
@@ -207,12 +209,10 @@ export const LabPage: React.FC = () => {
         p.y += p.vy;
         p.rotation += p.vRot;
 
-        // Bounce floor
         if (p.y + p.radius > canvas.height) {
           p.y = canvas.height - p.radius;
           p.vy *= bounce;
         }
-        // Bounce walls
         if (p.x - p.radius < 0) {
           p.x = p.radius;
           p.vx *= bounce;
@@ -221,7 +221,6 @@ export const LabPage: React.FC = () => {
           p.vx *= bounce;
         }
 
-        // Draw 4-point sparkle star
         ctx.save();
         ctx.translate(p.x, p.y);
         ctx.rotate(p.rotation);
@@ -241,7 +240,6 @@ export const LabPage: React.FC = () => {
         ctx.restore();
       }
 
-      // Limit particle count
       if (particlesRef.current.length > 120) {
         particlesRef.current.splice(0, particlesRef.current.length - 120);
       }
@@ -257,16 +255,42 @@ export const LabPage: React.FC = () => {
     <div style={{
       maxWidth: '1200px',
       margin: '0 auto',
-      padding: '40px 24px 80px',
+      padding: '30px 20px 80px',
     }}>
+      {/* Top Back Navigation Bar */}
+      <div style={{ marginBottom: '20px' }}>
+        <button
+          onClick={() => {
+            soundEngine.playClick(600, 0.04);
+            if (onBackToHome) {
+              onBackToHome();
+            } else {
+              window.history.back();
+            }
+          }}
+          className="retro-btn retro-btn-secondary"
+          style={{
+            padding: '8px 16px',
+            fontSize: '0.85rem',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '8px',
+          }}
+          title="Return to Home Portfolio"
+        >
+          <ArrowLeft size={16} />
+          <span>Back to Portfolio</span>
+        </button>
+      </div>
+
       {/* Lab Header */}
-      <div style={{ textAlign: 'center', marginBottom: '36px' }}>
+      <div style={{ textAlign: 'center', marginBottom: '32px' }}>
         <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}>
           <span className="retro-pill">
             <Sparkles size={12} color="var(--color-old-rose)" /> Creative Coding Playground
           </span>
         </div>
-        <h1 style={{ fontSize: 'clamp(2.2rem, 5vw, 3.4rem)', marginBottom: '12px' }}>
+        <h1 style={{ fontSize: 'clamp(2.1rem, 4.5vw, 3.2rem)', marginBottom: '10px' }}>
           reeee.dev Creative Lab
         </h1>
         <p style={{ maxWidth: '600px', margin: '0 auto', color: 'var(--color-taupe-grey)', fontSize: '1.05rem' }}>
@@ -279,8 +303,8 @@ export const LabPage: React.FC = () => {
         display: 'flex',
         flexWrap: 'wrap',
         justifyContent: 'center',
-        gap: '10px',
-        marginBottom: '36px',
+        gap: '8px',
+        marginBottom: '32px',
       }}>
         {[
           { id: 'pixel', label: '1. Retro Pixel Studio', icon: Paintbrush },
@@ -300,11 +324,11 @@ export const LabPage: React.FC = () => {
               style={{
                 fontFamily: 'var(--font-display)',
                 fontWeight: 700,
-                fontSize: '0.92rem',
+                fontSize: '0.88rem',
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '8px',
-                padding: '10px 20px',
+                padding: '8px 16px',
                 borderRadius: 'var(--radius-full)',
                 border: '2px solid var(--color-taupe-grey)',
                 backgroundColor: isActive ? 'var(--color-old-rose)' : 'var(--color-pale-slate)',
@@ -314,68 +338,63 @@ export const LabPage: React.FC = () => {
                 transition: 'all 0.15s ease',
               }}
             >
-              <Icon size={16} />
+              <Icon size={15} />
               <span>{item.label}</span>
             </button>
           );
         })}
       </div>
 
-      {/* ============================================================== */}
       {/* 1. RETRO PIXEL CANVAS TAB */}
-      {/* ============================================================== */}
       {activeTab === 'pixel' && (
         <div className="retro-box" style={{
           backgroundColor: 'var(--color-pale-slate)',
-          padding: '32px',
+          padding: '24px',
           maxWidth: '780px',
           margin: '0 auto',
         }}>
-          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '16px', marginBottom: '24px' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '16px', marginBottom: '20px' }}>
             <div>
-              <h2 style={{ fontSize: '1.5rem', marginBottom: '4px' }}>16×16 Palette Pixel Canvas</h2>
-              <p style={{ fontSize: '0.9rem', color: 'var(--color-taupe-grey)' }}>
+              <h2 style={{ fontSize: '1.4rem', marginBottom: '4px' }}>16×16 Palette Pixel Canvas</h2>
+              <p style={{ fontSize: '0.88rem', color: 'var(--color-taupe-grey)' }}>
                 Draw retro icons and avatars using the official reeee.dev palette. Export as a crisp PNG!
               </p>
             </div>
 
-            {/* Actions */}
             <div style={{ display: 'flex', gap: '8px' }}>
               <button
                 onClick={clearCanvas}
                 className="retro-btn retro-btn-secondary"
-                style={{ padding: '6px 12px', fontSize: '0.85rem' }}
+                style={{ padding: '6px 12px', fontSize: '0.82rem' }}
                 title="Clear canvas"
               >
-                <Trash2 size={15} /> Clear
+                <Trash2 size={14} /> Clear
               </button>
               <button
                 onClick={exportPNG}
                 className="retro-btn"
-                style={{ padding: '6px 14px', fontSize: '0.85rem' }}
+                style={{ padding: '6px 14px', fontSize: '0.82rem' }}
                 title="Download PNG image"
               >
-                <Download size={15} /> Export PNG
+                <Download size={14} /> Export PNG
               </button>
             </div>
           </div>
 
-          {/* Color Picker & Tools Bar */}
           <div style={{
             display: 'flex',
             flexWrap: 'wrap',
             alignItems: 'center',
             justifyContent: 'space-between',
             gap: '12px',
-            padding: '12px 16px',
+            padding: '12px 14px',
             backgroundColor: 'var(--color-soft-blush)',
             borderRadius: 'var(--radius-md)',
             border: '2px solid var(--color-taupe-grey)',
-            marginBottom: '24px',
+            marginBottom: '20px',
           }}>
-            {/* Color Swatches */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span style={{ fontSize: '0.8rem', fontFamily: 'var(--font-mono)', fontWeight: 700, marginRight: '4px' }}>
+              <span style={{ fontSize: '0.78rem', fontFamily: 'var(--font-mono)', fontWeight: 700, marginRight: '4px' }}>
                 PALETTE:
               </span>
               {PALETTE.map((c) => (
@@ -388,8 +407,8 @@ export const LabPage: React.FC = () => {
                   }}
                   title={c.name}
                   style={{
-                    width: '30px',
-                    height: '30px',
+                    width: '28px',
+                    height: '28px',
                     borderRadius: '8px',
                     backgroundColor: c.hex,
                     border: '2px solid var(--color-taupe-grey)',
@@ -402,7 +421,6 @@ export const LabPage: React.FC = () => {
               ))}
             </div>
 
-            {/* Brush vs Eraser Toggle */}
             <div style={{ display: 'flex', gap: '8px' }}>
               <button
                 onClick={() => {
@@ -410,7 +428,7 @@ export const LabPage: React.FC = () => {
                   setIsEraser(false);
                 }}
                 className={`retro-btn ${!isEraser ? '' : 'retro-btn-secondary'}`}
-                style={{ padding: '6px 12px', fontSize: '0.82rem' }}
+                style={{ padding: '6px 12px', fontSize: '0.8rem' }}
               >
                 <Paintbrush size={14} /> Brush
               </button>
@@ -420,14 +438,13 @@ export const LabPage: React.FC = () => {
                   setIsEraser(true);
                 }}
                 className={`retro-btn ${isEraser ? '' : 'retro-btn-secondary'}`}
-                style={{ padding: '6px 12px', fontSize: '0.82rem' }}
+                style={{ padding: '6px 12px', fontSize: '0.8rem' }}
               >
                 <Eraser size={14} /> Eraser
               </button>
             </div>
           </div>
 
-          {/* 16x16 Pixel Grid */}
           <div
             onMouseDown={() => setIsDrawing(true)}
             onMouseUp={() => setIsDrawing(false)}
@@ -436,12 +453,12 @@ export const LabPage: React.FC = () => {
               display: 'grid',
               gridTemplateColumns: `repeat(${GRID_SIZE}, 1fr)`,
               width: '100%',
-              maxWidth: '380px',
+              maxWidth: '360px',
               aspectRatio: '1 / 1',
               margin: '0 auto',
               border: '3px solid var(--color-taupe-grey)',
               borderRadius: 'var(--radius-sm)',
-              boxShadow: '6px 6px 0px var(--color-taupe-grey)',
+              boxShadow: '5px 5px 0px var(--color-taupe-grey)',
               backgroundColor: 'var(--color-taupe-grey)',
               gap: '1px',
               userSelect: 'none',
@@ -462,35 +479,32 @@ export const LabPage: React.FC = () => {
             ))}
           </div>
 
-          <div style={{ textAlign: 'center', marginTop: '16px', fontSize: '0.8rem', color: 'var(--color-taupe-grey)', fontFamily: 'var(--font-mono)' }}>
+          <div style={{ textAlign: 'center', marginTop: '14px', fontSize: '0.78rem', color: 'var(--color-taupe-grey)', fontFamily: 'var(--font-mono)' }}>
             ✦ Click or drag to draw • Powered by HTML5 Canvas &amp; reeee.dev palette tokens
           </div>
         </div>
       )}
 
-      {/* ============================================================== */}
       {/* 2. MELODY CHIME BOX TAB */}
-      {/* ============================================================== */}
       {activeTab === 'chimes' && (
         <div className="retro-box" style={{
           backgroundColor: 'var(--color-pale-slate)',
-          padding: '32px',
+          padding: '24px',
           maxWidth: '780px',
           margin: '0 auto',
         }}>
-          <div style={{ textAlign: 'center', marginBottom: '28px' }}>
-            <h2 style={{ fontSize: '1.6rem', marginBottom: '6px' }}>Pentatonic Vintage Chime Box</h2>
-            <p style={{ fontSize: '0.92rem', color: 'var(--color-taupe-grey)' }}>
+          <div style={{ textAlign: 'center', marginBottom: '24px' }}>
+            <h2 style={{ fontSize: '1.5rem', marginBottom: '6px' }}>Pentatonic Vintage Chime Box</h2>
+            <p style={{ fontSize: '0.9rem', color: 'var(--color-taupe-grey)' }}>
               A nostalgic Web Audio synthesizer tuned to a soft pentatonic scale. Click keys or trigger preset melodies.
             </p>
           </div>
 
-          {/* Interactive Keyboard Keys */}
           <div style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(8, 1fr)',
-            gap: '8px',
-            marginBottom: '32px',
+            gap: '6px',
+            marginBottom: '28px',
           }}>
             {CHIMES.map((chime, idx) => {
               const isHit = activeChimeIdx === idx;
@@ -499,33 +513,33 @@ export const LabPage: React.FC = () => {
                   key={chime.label}
                   onClick={() => playChimeNote(chime.freq, idx)}
                   style={{
-                    height: '160px',
+                    height: '140px',
                     backgroundColor: isHit ? 'var(--color-old-rose)' : 'var(--color-soft-blush)',
                     color: isHit ? 'var(--color-soft-blush)' : 'var(--color-taupe-grey)',
                     border: '2px solid var(--color-taupe-grey)',
                     borderRadius: 'var(--radius-md)',
-                    boxShadow: isHit ? '1px 1px 0px var(--color-taupe-grey)' : '3px 5px 0px var(--color-taupe-grey)',
-                    transform: isHit ? 'translate(2px, 4px)' : 'none',
+                    boxShadow: isHit ? '1px 1px 0px var(--color-taupe-grey)' : '3px 4px 0px var(--color-taupe-grey)',
+                    transform: isHit ? 'translate(2px, 3px)' : 'none',
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'space-between',
-                    padding: '12px 6px',
+                    padding: '10px 4px',
                     cursor: 'pointer',
                     transition: 'all 0.1s ease',
                   }}
                 >
-                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.72rem', fontWeight: 700 }}>
+                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', fontWeight: 700 }}>
                     [{chime.key}]
                   </span>
                   <div style={{
-                    width: '8px',
-                    height: '8px',
+                    width: '7px',
+                    height: '7px',
                     borderRadius: '50%',
                     backgroundColor: 'var(--color-old-rose)',
                     margin: '0 auto',
                     opacity: isHit ? 1 : 0.3,
                   }}></div>
-                  <span style={{ fontFamily: 'var(--font-display)', fontSize: '0.92rem', fontWeight: 800 }}>
+                  <span style={{ fontFamily: 'var(--font-display)', fontSize: '0.85rem', fontWeight: 800 }}>
                     {chime.label}
                   </span>
                 </button>
@@ -533,9 +547,8 @@ export const LabPage: React.FC = () => {
             })}
           </div>
 
-          {/* Preset Melodies Bar */}
           <div style={{
-            padding: '16px 20px',
+            padding: '14px 16px',
             backgroundColor: 'var(--color-soft-blush)',
             borderRadius: 'var(--radius-md)',
             border: '2px solid var(--color-taupe-grey)',
@@ -543,56 +556,53 @@ export const LabPage: React.FC = () => {
             flexWrap: 'wrap',
             alignItems: 'center',
             justifyContent: 'space-between',
-            gap: '12px',
+            gap: '10px',
           }}>
-            <span style={{ fontSize: '0.85rem', fontFamily: 'var(--font-mono)', fontWeight: 700 }}>
+            <span style={{ fontSize: '0.82rem', fontFamily: 'var(--font-mono)', fontWeight: 700 }}>
               AUTO PRESETS:
             </span>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
               <button
                 onClick={() => playSequence([0, 2, 4, 5, 7])}
                 className="retro-btn"
-                style={{ padding: '6px 14px', fontSize: '0.82rem' }}
+                style={{ padding: '6px 12px', fontSize: '0.8rem' }}
               >
-                <Play size={13} /> Y2K Startup
+                <Play size={12} /> Y2K Startup
               </button>
               <button
                 onClick={() => playSequence([4, 2, 0, 2, 4, 4, 4])}
                 className="retro-btn retro-btn-secondary"
-                style={{ padding: '6px 14px', fontSize: '0.82rem' }}
+                style={{ padding: '6px 12px', fontSize: '0.8rem' }}
               >
-                <Play size={13} /> Dreamy Rain
+                <Play size={12} /> Dreamy Rain
               </button>
               <button
                 onClick={() => playSequence([0, 4, 3, 5, 7, 7])}
                 className="retro-btn retro-btn-secondary"
-                style={{ padding: '6px 14px', fontSize: '0.82rem' }}
+                style={{ padding: '6px 12px', fontSize: '0.8rem' }}
               >
-                <Play size={13} /> Victory Chime
+                <Play size={12} /> Victory Chime
               </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* ============================================================== */}
       {/* 3. ASCII & Y2K TEXT STYLER TAB */}
-      {/* ============================================================== */}
       {activeTab === 'ascii' && (
         <div className="retro-box" style={{
           backgroundColor: 'var(--color-pale-slate)',
-          padding: '32px',
+          padding: '24px',
           maxWidth: '780px',
           margin: '0 auto',
         }}>
-          <h2 style={{ fontSize: '1.6rem', marginBottom: '6px' }}>Retro ASCII &amp; Y2K Text Styler</h2>
-          <p style={{ fontSize: '0.92rem', color: 'var(--color-taupe-grey)', marginBottom: '20px' }}>
+          <h2 style={{ fontSize: '1.5rem', marginBottom: '4px' }}>Retro ASCII &amp; Y2K Text Styler</h2>
+          <p style={{ fontSize: '0.9rem', color: 'var(--color-taupe-grey)', marginBottom: '18px' }}>
             Transform text into retro banner blocks and stylized Y2K typography with instant 1-click clipboard copy.
           </p>
 
-          {/* Text Input */}
-          <div style={{ marginBottom: '24px' }}>
-            <label style={{ display: 'block', fontSize: '0.82rem', fontFamily: 'var(--font-mono)', fontWeight: 700, marginBottom: '6px' }}>
+          <div style={{ marginBottom: '20px' }}>
+            <label style={{ display: 'block', fontSize: '0.8rem', fontFamily: 'var(--font-mono)', fontWeight: 700, marginBottom: '6px' }}>
               TYPE YOUR TEXT (MAX 12 CHARS):
             </label>
             <input
@@ -603,8 +613,8 @@ export const LabPage: React.FC = () => {
               placeholder="reeee.dev"
               style={{
                 width: '100%',
-                padding: '12px 16px',
-                fontSize: '1.1rem',
+                padding: '10px 14px',
+                fontSize: '1rem',
                 fontFamily: 'var(--font-mono)',
                 backgroundColor: 'var(--color-soft-blush)',
                 border: '2px solid var(--color-taupe-grey)',
@@ -615,18 +625,17 @@ export const LabPage: React.FC = () => {
             />
           </div>
 
-          {/* ASCII Banner Card */}
           <div style={{
             backgroundColor: '#2b2326',
             color: 'var(--color-soft-blush)',
             borderRadius: 'var(--radius-md)',
             border: '2px solid var(--color-taupe-grey)',
             padding: '16px',
-            marginBottom: '20px',
+            marginBottom: '18px',
             position: 'relative',
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-              <span style={{ fontSize: '0.75rem', fontFamily: 'var(--font-mono)', color: 'var(--color-cool-steel)' }}>
+              <span style={{ fontSize: '0.72rem', fontFamily: 'var(--font-mono)', color: 'var(--color-cool-steel)' }}>
                 ASCII BANNER BLOCK
               </span>
               <button
@@ -641,7 +650,7 @@ export const LabPage: React.FC = () => {
             <pre style={{
               margin: 0,
               fontFamily: 'var(--font-mono)',
-              fontSize: '0.85rem',
+              fontSize: '0.82rem',
               overflowX: 'auto',
               color: 'var(--color-soft-blush)',
               lineHeight: 1.4,
@@ -650,8 +659,7 @@ export const LabPage: React.FC = () => {
             </pre>
           </div>
 
-          {/* Alternate Y2K Styles */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '12px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '10px' }}>
             {[
               {
                 id: 'fullwidth',
@@ -672,14 +680,14 @@ export const LabPage: React.FC = () => {
               <div
                 key={st.id}
                 style={{
-                  padding: '14px',
+                  padding: '12px',
                   backgroundColor: 'var(--color-soft-blush)',
                   borderRadius: 'var(--radius-sm)',
                   border: '1.5px solid var(--color-taupe-grey)',
                 }}
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-                  <span style={{ fontSize: '0.72rem', fontFamily: 'var(--font-mono)', fontWeight: 700 }}>
+                  <span style={{ fontSize: '0.7rem', fontFamily: 'var(--font-mono)', fontWeight: 700 }}>
                     {st.title}
                   </span>
                   <button
@@ -690,7 +698,7 @@ export const LabPage: React.FC = () => {
                     {asciiCopied === st.id ? <Check size={14} color="#2b9348" /> : <Copy size={14} />}
                   </button>
                 </div>
-                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.95rem', fontWeight: 600 }}>
+                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.9rem', fontWeight: 600 }}>
                   {st.styled}
                 </div>
               </div>
@@ -699,20 +707,18 @@ export const LabPage: React.FC = () => {
         </div>
       )}
 
-      {/* ============================================================== */}
       {/* 4. SPARKLE GRAVITY TAB */}
-      {/* ============================================================== */}
       {activeTab === 'physics' && (
         <div className="retro-box" style={{
           backgroundColor: 'var(--color-pale-slate)',
-          padding: '32px',
+          padding: '24px',
           maxWidth: '780px',
           margin: '0 auto',
         }}>
-          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '16px', marginBottom: '20px' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '16px', marginBottom: '18px' }}>
             <div>
-              <h2 style={{ fontSize: '1.6rem', marginBottom: '4px' }}>Sparkle Gravity Physics Pad</h2>
-              <p style={{ fontSize: '0.92rem', color: 'var(--color-taupe-grey)' }}>
+              <h2 style={{ fontSize: '1.5rem', marginBottom: '4px' }}>Sparkle Gravity Physics Pad</h2>
+              <p style={{ fontSize: '0.88rem', color: 'var(--color-taupe-grey)' }}>
                 Click or drag across the interactive canvas to drop bouncy retro stars with velocity and restitution.
               </p>
             </div>
@@ -723,17 +729,16 @@ export const LabPage: React.FC = () => {
                 particlesRef.current = [];
               }}
               className="retro-btn retro-btn-secondary"
-              style={{ padding: '6px 14px', fontSize: '0.85rem' }}
+              style={{ padding: '6px 12px', fontSize: '0.82rem' }}
             >
-              <Trash2 size={15} /> Clear Canvas
+              <Trash2 size={14} /> Clear Canvas
             </button>
           </div>
 
-          {/* Interactive Physics Canvas */}
           <div style={{
             position: 'relative',
             width: '100%',
-            height: '380px',
+            height: '350px',
             border: '2px solid var(--color-taupe-grey)',
             borderRadius: 'var(--radius-md)',
             boxShadow: '4px 4px 0px var(--color-taupe-grey)',
@@ -743,18 +748,18 @@ export const LabPage: React.FC = () => {
             <canvas
               ref={canvasRef}
               width={700}
-              height={380}
+              height={350}
               onMouseDown={(e) => {
                 const rect = e.currentTarget.getBoundingClientRect();
                 const scaleX = 700 / rect.width;
-                const scaleY = 380 / rect.height;
+                const scaleY = 350 / rect.height;
                 addSparkle((e.clientX - rect.left) * scaleX, (e.clientY - rect.top) * scaleY);
               }}
               onMouseMove={(e) => {
                 if (e.buttons === 1) {
                   const rect = e.currentTarget.getBoundingClientRect();
                   const scaleX = 700 / rect.width;
-                  const scaleY = 380 / rect.height;
+                  const scaleY = 350 / rect.height;
                   addSparkle((e.clientX - rect.left) * scaleX, (e.clientY - rect.top) * scaleY);
                 }
               }}
@@ -767,13 +772,13 @@ export const LabPage: React.FC = () => {
 
             <div style={{
               position: 'absolute',
-              bottom: '12px',
-              left: '12px',
+              bottom: '10px',
+              left: '10px',
               backgroundColor: 'rgba(255, 219, 218, 0.9)',
               padding: '4px 10px',
               borderRadius: 'var(--radius-full)',
               border: '1px solid var(--color-taupe-grey)',
-              fontSize: '0.75rem',
+              fontSize: '0.72rem',
               fontFamily: 'var(--font-mono)',
               pointerEvents: 'none',
             }}>

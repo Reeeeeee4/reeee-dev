@@ -14,7 +14,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigateToLab, onNav
   const [termHistory, setTermHistory] = useState<Array<{ cmd: string; output: string }>>([
     {
       cmd: 'reeee --status',
-      output: 'SYSTEM: ALL_SERVICES_NOMINAL\nUPTIME: 99.98%\nEDGE: Cloudflare Pages Subdomain Ready\nSECURITY: Zero-Trust Strict Enforced'
+      output: 'SYSTEM: ALL_SERVICES_NOMINAL\nUPTIME: 99.98%\nEDGE: Cloudflare Pages Ready\nSTATUS: Building useful things & exploring the web'
     }
   ]);
 
@@ -37,7 +37,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigateToLab, onNav
         res = '🟢 ALL SYSTEMS OPTIMAL\n• Infrastructure: Edge CDN & Docker\n• DNS Resolution: 2.4ms avg\n• Memory Footprint: Lean (Zero Bloat)';
         break;
       case 'whoami':
-        res = 'reeee.dev :: Full-Stack IT Systems Specialist & Creative Web Developer.';
+        res = 'reeee.dev :: Developer who enjoys building useful things and exploring what the web can do.';
         break;
       case 'tech':
       case 'skills':
@@ -47,6 +47,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigateToLab, onNav
       case 'ping 8.8.8.8':
         res = '64 bytes from 8.8.8.8: icmp_seq=1 ttl=118 time=4.21 ms\n64 bytes from 8.8.8.8: icmp_seq=2 ttl=118 time=4.08 ms\n--- 0.0% packet loss ---';
         break;
+      case 'email':
+      case 'contact':
+        res = `EMAIL: ${PORTFOLIO_INFO.email} (Ready for collaborations & projects)`;
+        break;
       case 'palette':
         res = 'Active Palette: #FFDBDA (Soft Blush), #DB7F8E (Old Rose), #D5C5C8 (Pale Slate), #9DA3A4 (Cool Steel), #604D53 (Taupe Grey)';
         break;
@@ -55,7 +59,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigateToLab, onNav
         setTermInput('');
         return;
       case 'help':
-        res = 'Available commands: status, whoami, skills, ping, palette, clear';
+        res = 'Available commands: status, whoami, skills, ping, email, palette, clear';
         break;
       default:
         res = `Command not recognized: "${cmdToRun}". Type "help" or click command pills below.`;
@@ -74,7 +78,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigateToLab, onNav
   return (
     <section style={{
       position: 'relative',
-      padding: '48px 24px 64px',
+      padding: '40px 20px 60px',
       maxWidth: '1200px',
       margin: '0 auto',
       overflow: 'hidden',
@@ -82,26 +86,32 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigateToLab, onNav
       {/* Decorative Y2K Background Sparkles */}
       <div style={{
         position: 'absolute',
-        top: '20px',
-        right: '40px',
+        top: '15px',
+        right: '25px',
         color: 'var(--color-old-rose)',
         opacity: 0.7,
         pointerEvents: 'none',
       }}>
-        <Sparkles size={36} className="animate-sparkle" />
+        <Sparkles size={32} className="animate-sparkle" />
       </div>
 
       <div style={{
         display: 'grid',
         gridTemplateColumns: '1fr',
-        gap: '40px',
+        gap: '36px',
         alignItems: 'center',
       }} className="hero-grid">
         
         {/* Left Column: Introductions & Branding */}
         <div>
           {/* Status Pill Badge */}
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
+          <div style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            alignItems: 'center',
+            gap: '8px',
+            marginBottom: '16px',
+          }} className="hero-status-row">
             <span className="retro-pill" style={{ backgroundColor: 'var(--color-pale-slate)' }}>
               <span style={{
                 width: '8px',
@@ -111,59 +121,54 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigateToLab, onNav
                 display: 'inline-block',
                 boxShadow: '0 0 6px #52b788',
               }}></span>
-              reeee.dev • Online &amp; Systems Nominal
+              reeee.dev • Online
             </span>
             <span className="retro-pill" style={{ backgroundColor: 'var(--color-soft-blush)' }}>
               <Cloud size={13} color="var(--color-old-rose)" /> Cloudflare Ready
             </span>
           </div>
 
-          {/* Main Title */}
+          {/* Big Headline */}
           <h1 style={{
-            fontSize: 'clamp(2.4rem, 5vw, 4.2rem)',
+            fontSize: 'clamp(2.1rem, 4.8vw, 3.8rem)',
             fontWeight: 800,
-            lineHeight: 1.08,
-            marginBottom: '20px',
+            lineHeight: 1.12,
+            marginBottom: '18px',
             color: 'var(--color-taupe-grey)',
             letterSpacing: '-0.03em',
           }}>
-            Systems rigor.<br />
+            Code, creativity, and{' '}
             <span style={{
               color: 'var(--color-old-rose)',
               position: 'relative',
               display: 'inline-block',
             }}>
-              Romantic web craft.
+              everything in between.
             </span>
           </h1>
 
-          {/* Subtitle / Bio */}
+          {/* Short Bio */}
           <p style={{
-            fontSize: '1.15rem',
+            fontSize: 'clamp(1rem, 2vw, 1.15rem)',
             lineHeight: 1.65,
             color: 'var(--color-taupe-grey)',
-            maxWidth: '560px',
+            maxWidth: '580px',
             marginBottom: '28px',
           }}>
-            I'm a full-stack IT specialist and creative engineer. At <strong style={{ color: 'var(--color-taupe-grey)' }}>reeee.dev</strong>, I combine hardened infrastructure (Linux, networking, zero-trust security) with playful, nostalgic interactive web experiences.
+            Just a developer who enjoys building useful things and exploring what the web can do. At <strong style={{ color: 'var(--color-taupe-grey)' }}>reeee.dev</strong>, I share my projects, experiments, and the ideas I bring to life through code.
           </p>
 
-          {/* Call to Action Buttons */}
-          <div style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            gap: '14px',
-            marginBottom: '32px',
-          }}>
+          {/* Call to Action Buttons: Mobile layout (2 top, 1 bottom middle) */}
+          <div className="hero-cta-group">
             <button
               onClick={() => {
                 soundEngine.playClick(700, 0.05);
                 onNavigateToProjects();
               }}
-              className="retro-btn"
+              className="retro-btn hero-cta-btn-1"
             >
-              Explore Projects
-              <ArrowRight size={18} />
+              <span>Explore Projects</span>
+              <ArrowRight size={17} />
             </button>
 
             <button
@@ -171,36 +176,32 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigateToLab, onNav
                 soundEngine.playSparkle();
                 onNavigateToLab();
               }}
-              className="retro-btn retro-btn-secondary"
+              className="retro-btn retro-btn-secondary hero-cta-btn-2"
             >
               <Sparkles size={16} color="var(--color-old-rose)" />
-              Creative Lab 🧪
+              <span>Creative Lab 🧪</span>
             </button>
 
             <button
               onClick={handleCopyEmail}
-              className="retro-btn retro-btn-secondary"
-              title="Copy hello@reeee.dev"
+              className="retro-btn retro-btn-secondary hero-cta-btn-3"
+              title={`Copy ${PORTFOLIO_INFO.email}`}
             >
               {copied ? <Check size={16} color="#2b9348" /> : <Copy size={16} />}
-              <span>{copied ? 'Copied Email! ✨' : 'hello@reeee.dev'}</span>
+              <span>{copied ? 'Copied Email! ✨' : PORTFOLIO_INFO.email}</span>
             </button>
           </div>
 
-          {/* Decorative Y2K Badges */}
-          <div style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            gap: '10px',
-          }}>
-            <span className="retro-pill" style={{ backgroundColor: 'var(--color-soft-blush)' }}>
-              <Shield size={12} /> Zero-Trust Mindset
+          {/* 3 Mobile-Friendly Decorative Badges */}
+          <div className="hero-badges-group">
+            <span className="retro-pill hero-badge-item">
+              <Shield size={12} color="var(--color-old-rose)" /> Zero-Trust Mindset
             </span>
-            <span className="retro-pill" style={{ backgroundColor: 'var(--color-soft-blush)' }}>
+            <span className="retro-pill hero-badge-item">
               <Heart size={12} color="var(--color-old-rose)" /> Retro Y2K Aesthetic
             </span>
-            <span className="retro-pill" style={{ backgroundColor: 'var(--color-soft-blush)' }}>
-              <Sparkles size={12} /> TypeScript &amp; React 19
+            <span className="retro-pill hero-badge-item">
+              <Sparkles size={12} color="var(--color-old-rose)" /> TypeScript &amp; React 19
             </span>
           </div>
         </div>
@@ -210,6 +211,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigateToLab, onNav
           backgroundColor: 'var(--color-pale-slate)',
           padding: '0',
           overflow: 'hidden',
+          width: '100%',
         }}>
           {/* Window Title Bar */}
           <div style={{
@@ -237,12 +239,12 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigateToLab, onNav
           {/* Terminal Body */}
           <div style={{
             padding: '16px',
-            minHeight: '230px',
-            maxHeight: '300px',
+            minHeight: '210px',
+            maxHeight: '280px',
             overflowY: 'auto',
             fontFamily: 'var(--font-mono)',
-            fontSize: '0.85rem',
-            backgroundColor: '#2b2326', // Deep taupe for retro terminal interior
+            fontSize: '0.84rem',
+            backgroundColor: '#2b2326',
             color: 'var(--color-soft-blush)',
             display: 'flex',
             flexDirection: 'column',
@@ -277,7 +279,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigateToLab, onNav
                 type="text"
                 value={termInput}
                 onChange={(e) => setTermInput(e.target.value)}
-                placeholder="type 'help', 'status', 'ping'..."
+                placeholder="type 'help', 'email', 'skills'..."
                 style={{
                   flex: 1,
                   background: 'none',
@@ -301,10 +303,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigateToLab, onNav
             gap: '6px',
             alignItems: 'center',
           }}>
-            <span style={{ fontSize: '0.75rem', fontWeight: 700, fontFamily: 'var(--font-mono)', color: 'var(--color-taupe-grey)' }}>
-              QUICK CMD:
+            <span style={{ fontSize: '0.72rem', fontWeight: 700, fontFamily: 'var(--font-mono)', color: 'var(--color-taupe-grey)' }}>
+              CMD:
             </span>
-            {['status', 'whoami', 'skills', 'ping', 'palette', 'clear'].map((cmd) => (
+            {['status', 'whoami', 'skills', 'email', 'palette', 'clear'].map((cmd) => (
               <button
                 key={cmd}
                 onClick={() => executeCommand(cmd)}
@@ -330,10 +332,77 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigateToLab, onNav
 
       </div>
 
+      {/* Responsive Styles */}
       <style>{`
+        /* Desktop Default */
+        .hero-cta-group {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 12px;
+          margin-bottom: 28px;
+        }
+
+        .hero-badges-group {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 10px;
+        }
+
+        .hero-badge-item {
+          background-color: var(--color-soft-blush);
+        }
+
         @media (min-width: 900px) {
           .hero-grid {
             grid-template-columns: 1.15fr 0.85fr !important;
+          }
+        }
+
+        /* Mobile Layout: 2 buttons on top, 1 button centered at bottom */
+        @media (max-width: 640px) {
+          .hero-cta-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 24px;
+          }
+
+          .hero-cta-btn-1 {
+            grid-column: 1;
+            padding: 10px 12px !important;
+            font-size: 0.88rem !important;
+          }
+
+          .hero-cta-btn-2 {
+            grid-column: 2;
+            padding: 10px 12px !important;
+            font-size: 0.88rem !important;
+          }
+
+          .hero-cta-btn-3 {
+            grid-column: 1 / -1;
+            justify-self: center;
+            width: 100%;
+            max-width: 320px;
+            padding: 10px 16px !important;
+            font-size: 0.88rem !important;
+          }
+
+          .hero-badges-group {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+          }
+
+          .hero-badge-item {
+            font-size: 0.74rem !important;
+            padding: 4px 10px !important;
+          }
+
+          .hero-status-row {
+            justify-content: flex-start;
           }
         }
       `}</style>
