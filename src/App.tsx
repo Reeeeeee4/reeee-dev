@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Navbar } from './components/Navbar';
 import { HeroSection } from './components/HeroSection';
 import { ProjectsSection } from './components/ProjectsSection';
@@ -7,6 +7,7 @@ import { ExperienceSection } from './components/ExperienceSection';
 import { ContactSection } from './components/ContactSection';
 import { LabPage } from './components/LabPage';
 import { Footer } from './components/Footer';
+import { MarqueeBanner } from './components/MarqueeBanner';
 
 export const App: React.FC = () => {
   // Read initial path to support direct loading of /creative-lab
@@ -70,7 +71,7 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="bg-grain" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <div className="bg-grain" style={{ width: '100%', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       {/* Sticky Navigation Header */}
       <Navbar activeTab={activeTab} onNavigate={navigateTo} />
 
@@ -87,9 +88,13 @@ export const App: React.FC = () => {
               />
             </div>
 
+            <MarqueeBanner />
             <ProjectsSection />
+            <MarqueeBanner />
             <SkillsSection />
+            <MarqueeBanner />
             <ExperienceSection />
+            <MarqueeBanner />
             <ContactSection />
           </>
         )}

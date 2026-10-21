@@ -44,10 +44,10 @@ export const ContactSection: React.FC = () => {
           </span>
         </div>
         <h2 style={{ fontSize: 'clamp(2rem, 4vw, 2.8rem)', marginBottom: '12px' }}>
-          Let's Build Something Resilient
+          Let's Talk!
         </h2>
         <p style={{ maxWidth: '580px', margin: '0 auto', color: 'var(--color-taupe-grey)', fontSize: '1.05rem' }}>
-          Have an IT infrastructure challenge, cloud architecture consultation, or a creative web experiment in mind?
+          Have something in mind? Well, tell me about it :P
         </p>
       </div>
 
@@ -59,7 +59,7 @@ export const ContactSection: React.FC = () => {
 
         {/* Left Column: Direct Info Cards */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          
+
           {/* Main Direct Email Card */}
           <div className="retro-box" style={{
             padding: '24px',
@@ -82,7 +82,7 @@ export const ContactSection: React.FC = () => {
             </div>
 
             <p style={{ fontSize: '0.9rem', color: 'var(--color-taupe-grey)', marginBottom: '16px' }}>
-              Drop an email for IT infrastructure inquiries, web projects, or consulting collaborations.
+              Drop an email for the carrier pigeon
             </p>
 
             <div style={{
@@ -120,7 +120,7 @@ export const ContactSection: React.FC = () => {
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               <Clock size={16} color="var(--color-old-rose)" />
-              <span style={{ fontSize: '0.88rem' }}><strong>Response Time:</strong> Typically under 24 hours</span>
+              <span style={{ fontSize: '0.88rem' }}><strong>Response Time:</strong> Whenever I check my email</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               <MapPin size={16} color="var(--color-old-rose)" />
@@ -182,7 +182,7 @@ export const ContactSection: React.FC = () => {
                   required
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  placeholder="e.g. Alex Rivera"
+                  placeholder="e.g. Meow"
                   style={{
                     width: '100%',
                     padding: '10px 14px',
@@ -204,7 +204,7 @@ export const ContactSection: React.FC = () => {
                   required
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  placeholder="alex@domain.com"
+                  placeholder="meow@email.com"
                   style={{
                     width: '100%',
                     padding: '10px 14px',
@@ -219,13 +219,13 @@ export const ContactSection: React.FC = () => {
 
               <div>
                 <label style={{ display: 'block', fontSize: '0.8rem', fontFamily: 'var(--font-mono)', fontWeight: 700, marginBottom: '6px' }}>
-                  PROJECT TOPIC:
+                  SUBJECT:
                 </label>
                 <input
                   type="text"
                   value={formData.subject}
                   onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                  placeholder="IT Systems Audit / Full-Stack Project / Creative Lab inquiry"
+                  placeholder="Meow Meow"
                   style={{
                     width: '100%',
                     padding: '10px 14px',
@@ -247,7 +247,7 @@ export const ContactSection: React.FC = () => {
                   rows={4}
                   value={formData.message}
                   onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                  placeholder="Tell me about your systems architecture, requirements, or web project goals..."
+                  placeholder="Meow meow meow meow..."
                   style={{
                     width: '100%',
                     padding: '10px 14px',

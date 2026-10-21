@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { ArrowRight, Copy, Check, Sparkles, Terminal as TerminalIcon, Cloud, Shield, Heart } from 'lucide-react';
 import { PORTFOLIO_INFO } from '../data/portfolioData';
 import { soundEngine } from '../utils/audio';
@@ -202,18 +202,27 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigateToLab, onNav
             </button>
           </div>
 
-          {/* 3 Mobile-Friendly Decorative Badges */}
-          <div className="hero-badges-group">
-            <span className="retro-pill hero-badge-item">
-              <Shield size={12} color="var(--color-old-rose)" /> Zero-Trust Mindset
-            </span>
-            <span className="retro-pill hero-badge-item">
-              <Heart size={12} color="var(--color-old-rose)" /> Retro Y2K Aesthetic
-            </span>
-            <span className="retro-pill hero-badge-item">
-              <Sparkles size={12} color="var(--color-old-rose)" /> TypeScript &amp; React 19
-            </span>
-          </div>
+          {/* Inline Marquee Ticker
+          <div className="hero-inline-marquee">
+            <div className="hero-inline-marquee-track">
+              {[...Array(6)].map((_, repeatIdx) => (
+                <React.Fragment key={repeatIdx}>
+                  <span className="retro-pill hero-badge-item">
+                    <Shield size={12} color="var(--color-old-rose)" /> Zero-Trust Mindset
+                  </span>
+                  <span style={{ color: 'var(--color-old-rose)', opacity: 0.5, flexShrink: 0 }}>✦</span>
+                  <span className="retro-pill hero-badge-item">
+                    <Heart size={12} color="var(--color-old-rose)" /> Retro Y2K Aesthetic
+                  </span>
+                  <span style={{ color: 'var(--color-old-rose)', opacity: 0.5, flexShrink: 0 }}>✦</span>
+                  <span className="retro-pill hero-badge-item">
+                    <Sparkles size={12} color="var(--color-old-rose)" /> TypeScript &amp; React 19
+                  </span>
+                  <span style={{ color: 'var(--color-old-rose)', opacity: 0.5, flexShrink: 0 }}>✦</span>
+                </React.Fragment>
+              ))}
+            </div>
+          </div> */}
         </div>
 
         {/* Right Column: Interactive Retro Terminal Widget */}
@@ -344,33 +353,66 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigateToLab, onNav
 
       {/* Responsive Styles */}
       <style>{`
-        /* Desktop: Buttons aligned in the same single column */
+        /* Desktop: 2 buttons on top row, 1 centered below */
         .hero-cta-group {
-          display: flex;
-          flex-direction: column;
-          align-items: flex-start;
-          gap: 12px;
-          margin-bottom: 28px;
-        }
-
-        .hero-cta-btn-1,
-        .hero-cta-btn-2,
-        .hero-cta-btn-3 {
-          width: auto;
-          min-width: 200px;
-          justify-content: flex-start;
-          padding: 10px 20px !important;
-        }
-
-        .hero-badges-group {
-          display: flex;
-          flex-wrap: wrap;
-          align-items: center;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
           gap: 10px;
+          margin-bottom: 28px;
+          width: 100%;
+          max-width: 460px;
+        }
+
+        .hero-cta-btn-1 {
+          grid-column: 1;
+          justify-content: center;
+          padding: 10px 16px !important;
+        }
+
+        .hero-cta-btn-2 {
+          grid-column: 2;
+          justify-content: center;
+          padding: 10px 16px !important;
+        }
+
+        .hero-cta-btn-3 {
+          grid-column: 1 / -1;
+          justify-self: center;
+          width: 100%;
+          max-width: 320px;
+          justify-content: center;
+          padding: 10px 20px !important;
         }
 
         .hero-badge-item {
           background-color: var(--color-soft-blush);
+          flex-shrink: 0;
+        }
+
+        /* Inline hero marquee */
+        .hero-inline-marquee {
+          overflow: hidden;
+          width: 100%;
+          max-width: 460px;
+          mask-image: linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%);
+          -webkit-mask-image: linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%);
+        }
+
+        .hero-inline-marquee-track {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          width: max-content;
+          animation: hero-badge-scroll 20s linear infinite;
+        }
+
+        @keyframes hero-badge-scroll {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+
+        .hero-inline-marquee:hover .hero-inline-marquee-track {
+          animation-play-state: paused;
         }
 
         @media (min-width: 900px) {
@@ -379,50 +421,28 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigateToLab, onNav
           }
         }
 
-        /* Mobile Layout: 2 buttons on top, 1 centered button on bottom */
+        /* Mobile Layout: same 2-up grid, just smaller */
         @media (max-width: 640px) {
           .hero-cta-group {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
+            max-width: 100%;
+            gap: 8px;
             margin-bottom: 24px;
-            width: 100%;
           }
 
-          .hero-cta-btn-1 {
-            grid-column: 1;
-            min-width: unset;
-            justify-content: center;
-            padding: 10px 12px !important;
-            font-size: 0.88rem !important;
-          }
-
+          .hero-cta-btn-1,
           .hero-cta-btn-2 {
-            grid-column: 2;
-            min-width: unset;
-            justify-content: center;
-            padding: 10px 12px !important;
             font-size: 0.88rem !important;
+            padding: 10px 10px !important;
           }
 
           .hero-cta-btn-3 {
-            grid-column: 1 / -1;
-            justify-self: center;
-            width: 100%;
-            max-width: 320px;
-            justify-content: center;
-            padding: 10px 16px !important;
             font-size: 0.88rem !important;
+            padding: 10px 14px !important;
+            max-width: 100%;
           }
 
-          /* Mobile Badges: Clean, left-aligned matching the headline and text flow */
-          .hero-badges-group {
-            display: flex;
-            flex-direction: row;
-            flex-wrap: wrap;
-            justify-content: flex-start;
-            gap: 8px;
-            width: 100%;
+          .hero-inline-marquee {
+            max-width: 100%;
           }
 
           .hero-badge-item {
