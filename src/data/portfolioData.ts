@@ -41,7 +41,7 @@ export const PORTFOLIO_INFO = {
   location: 'Global Cloud / Remote',
   email: 'limrenee0414@gmail.com',
   githubUrl: 'https://github.com/Reeeeeee4',
-  bio: `Just a developer who enjoys building useful things and exploring what the web can do. At reeee.dev, I share my projects, experiments, and the ideas I bring to life through code.`,
+  bio: `Just a developer who enjoys building useful things and exploring what the web can do. At reeee.dev, I share my projects, experiments, and the ideas I bring to life through code :)`,
 };
 
 export const PROJECTS: Project[] = [
