@@ -1,17 +1,17 @@
-﻿import React from 'react';
+import React from 'react';
 import { Shield, Heart, Sparkles, Cloud, Terminal, Cpu, Zap, Code2 } from 'lucide-react';
 import { soundEngine } from '../utils/audio';
 
 export const MarqueeBanner: React.FC = () => {
   const items = [
-    { label: 'Zero-Trust Mindset', icon: Shield },
-    { label: 'Retro Y2K Aesthetic', icon: Heart },
-    { label: 'TypeScript & React 19', icon: Sparkles },
-    { label: 'Cloudflare Pages Ready', icon: Cloud },
-    { label: 'Linux & PowerShell', icon: Terminal },
-    { label: 'Creative Web Engineering', icon: Code2 },
-    { label: 'Sub-Second Edge Telemetry', icon: Zap },
-    { label: 'Deterministic Systems', icon: Cpu },
+    { label: 'Curious By Nature', icon: Sparkles },
+    { label: 'Retro Pixels & Digital Dreams', icon: Heart },
+    { label: 'Code • Create • Experiment', icon: Code2 },
+    { label: 'Building For The Web', icon: Cloud },
+    { label: 'Always Learning Something New', icon: Terminal },
+    { label: 'Logic Meets Creativity', icon: Cpu },
+    { label: 'Turning Ideas Into Projects', icon: Zap },
+    { label: 'Powered By Curiosity', icon: Shield },
   ];
 
   // Duplicate items array to make a seamless infinite loop
