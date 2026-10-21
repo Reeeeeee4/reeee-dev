@@ -1,4 +1,4 @@
-﻿export interface Project {
+export interface Project {
   id: string;
   title: string;
   category: 'Systems & IT' | 'Web Apps' | 'Creative Tech';
@@ -46,123 +46,87 @@ export const PORTFOLIO_INFO = {
 
 export const PROJECTS: Project[] = [
   {
-    id: 'netpulse-monitor',
-    title: 'NetPulse Network Telemetry',
-    category: 'Systems & IT',
-    description: 'Real-time network diagnostic and latency monitoring dashboard tracking sub-second ping variance, packet loss, and port health across multi-region nodes.',
-    highlight: 'Enterprise network metrics with zero-overhead telemetry daemons.',
-    tags: ['TypeScript', 'Node.js', 'ICMP/SNMP', 'WebSockets', 'Chart.js', 'Linux'],
-    metrics: '99.98% uptime telemetry • <5ms sample latency',
-    iconName: 'Activity',
-    details: {
-      problem: 'Distributed server clusters lacked centralized, lightweight latency visualization without running heavyweight monitoring agents.',
-      solution: 'Engineered a standalone telemetry daemon that polls nodes via ICMP and TCP sockets, streaming aggregated time-series telemetry via WebSockets to a retro dashboard.',
-      architecture: [
-        'Lightweight Node.js telemetry collector on edge nodes',
-        'In-memory circular buffer for real-time jitter statistics',
-        'Reactive TypeScript UI with instant anomaly notifications'
-      ],
-      impact: 'Identified routing degradation 14 minutes faster than legacy SNMP alerting systems.'
-    }
-  },
-  {
-    id: 'cloudvault-iam',
-    title: 'CloudVault Zero-Trust Gateway',
-    category: 'Systems & IT',
-    description: 'Granular access management tool that generates ephemeral presigned tokens, audit logs, and automated IAM policy least-privilege audits.',
-    highlight: 'Automated least-privilege policy generation & access auditing.',
-    tags: ['Cloudflare Workers', 'AWS S3', 'TypeScript', 'Zero-Trust', 'Security'],
-    metrics: '0 credential leaks • 100% ephemeral token lifetimes',
-    iconName: 'ShieldCheck',
-    details: {
-      problem: 'Developer teams were sharing long-lived S3 access credentials, increasing blast radius in development environments.',
-      solution: 'Built an ephemeral token service operating on Cloudflare Workers that generates 15-minute scoped cryptographic signed URLs with comprehensive IP logging.',
-      architecture: [
-        'Cloudflare Workers edge authentication layer',
-        'HMAC SHA-256 signature verification pipeline',
-        'Real-time access audit log stream into durable storage'
-      ],
-      impact: 'Eliminated permanent developer credential storage on local workstations.'
-    }
-  },
-  {
-    id: 'chromaflow-canvas',
-    title: 'ChromaFlow Generative Studio',
+    id: 'comfort-food',
+    title: 'Comfort Food',
     category: 'Creative Tech',
-    description: 'Algorithmic vector graphic and SVG flow-field engine. Generates harmonized geometric art and exportable SVG assets using customizable mathematical attractors.',
-    highlight: 'Mathematical flow fields rendered in real-time browser canvas.',
-    tags: ['Creative Coding', 'HTML5 Canvas', 'Mathematics', 'SVG', 'TypeScript'],
-    metrics: '60 FPS render loop • 0 external graphics libraries',
+    description: 'A cozy, story-driven idle cooking game built in Godot Engine. Serve meaningful meals to late-night customers and uncover their stories, one dish at a time.',
+    highlight: 'A heartfelt game blending idle mechanics with narrative storytelling.',
+    tags: ['Godot', 'GDScript', 'Game Dev', 'Narrative', 'Indie'],
+    metrics: 'Story-driven • Cozy idle mechanics',
     iconName: 'Sparkles',
+    githubUrl: 'https://github.com/Reeeeeee4/comfort-food',
     details: {
-      problem: 'Web interfaces often rely on heavy static raster graphics that don’t adapt dynamically to UI theme shifts.',
-      solution: 'Developed an interactive Perlin noise and Lorenz attractor engine that draws procedural vector paths natively in canvas with instant SVG export.',
+      problem: 'Wanted to explore storytelling through gameplay mechanics — making the act of cooking feel emotionally meaningful rather than just a score system.',
+      solution: 'Built a cozy idle loop in Godot where each customer has a backstory revealed through their food orders, blending warm pixel art with gentle narrative beats.',
       architecture: [
-        'Custom 2D Perlin noise generator in TypeScript',
-        'OffscreenCanvas rendering worker for lag-free UI interaction',
-        'Dynamic palette harmonizer adhering to brand guidelines'
+        'Godot Engine scene system for modular customer and story states',
+        'GDScript dialogue engine with branching narrative trees',
+        'Custom idle timer system tied to emotional story progression'
       ],
-      impact: 'Reduced asset payload size by 84% while creating dynamic interactive visual flair.'
+      impact: 'A personal creative project exploring the intersection of comfort, food, and human connection through game design.'
     }
   },
   {
-    id: 'sysmonit-agent',
-    title: 'SysMonit Daemon & CLI',
-    category: 'Systems & IT',
-    description: 'Cross-platform system maintenance daemon written in TypeScript & PowerShell. Automates cache purging, log rotation, and CPU/RAM threshold warnings.',
-    highlight: 'Automated disk hygiene and system health telemetry agent.',
-    tags: ['PowerShell', 'Bash', 'TypeScript', 'Node CLI', 'Windows/Linux'],
-    metrics: 'Reclaimed 40+ GB average temp bloat per host',
-    iconName: 'Terminal',
+    id: 'daily-horoscope-bot',
+    title: 'Daily Horoscope Bot',
+    category: 'Creative Tech',
+    description: 'An automated bot that delivers daily horoscope readings. A fun little automation project mixing astrology APIs with scheduled messaging — runs itself, no fuss.',
+    highlight: 'Automated daily horoscope delivery with zero manual effort.',
+    tags: ['Python', 'Automation', 'Bot', 'API', 'Scheduler'],
+    metrics: 'Daily auto-delivery • 0 manual interventions',
+    iconName: 'Activity',
+    githubUrl: 'https://github.com/Reeeeeee4/daily-horoscope-bot',
     details: {
-      problem: 'Workstations and dev servers frequently suffer performance bottlenecks due to runaway temp files, stale npm caches, and zombie processes.',
-      solution: 'Created an intelligent daemon with configurable cron routines that gracefully cleans ephemeral build artifacts and issues desktop/webhook alerts.',
+      problem: 'Wanted a fun automation challenge — building something that runs itself and brings a small daily ritual to users without any manual effort.',
+      solution: 'Wrote a bot that pulls horoscope data from an API on a daily schedule and sends personalized readings, built as a lightweight and self-sustaining script.',
       architecture: [
-        'Native PowerShell core integration for Windows hosts',
-        'POSIX-compliant shell hooks for Linux/macOS environments',
-        'Configurable JSON rulebook for safe directory exemptions'
+        'Scheduled Python script with cron-style task runner',
+        'External horoscope API integration with data parsing',
+        'Configurable delivery targets and message formatting'
       ],
-      impact: 'Maintained optimal free disk space on high-density developer systems.'
+      impact: 'A playful, fully automated bot that runs quietly in the background — proving that automation can be whimsical too.'
     }
   },
   {
-    id: 'y2k-retroarchivist',
-    title: 'RetroArchivist Headless CMS',
+    id: 'rockoo',
+    title: 'Rockoo',
     category: 'Web Apps',
-    description: 'A nostalgic, ultra-fast headless publishing portal. Combines vintage Y2K design motifs with modern markdown parsing, static generation, and instant preview.',
-    highlight: 'Instant static markdown builds with nostalgic micro-interactions.',
-    tags: ['React', 'Vite', 'TypeScript', 'Markdown', 'Cloudflare Pages'],
-    metrics: '100/100 Lighthouse Performance • 0.3s TTFB',
+    description: 'A personal creative web project and experiment in building something expressive and playful on the web — mixing UI ideas with a creative concept.',
+    highlight: 'A creative web experiment with personality.',
+    tags: ['Web', 'Creative', 'JavaScript', 'CSS', 'Interactive'],
+    metrics: 'Personal project • Creative exploration',
     iconName: 'FolderGit2',
+    githubUrl: 'https://github.com/Reeeeeee4/rockoo',
     details: {
-      problem: 'Content creators wanted a portfolio CMS that felt warm and playful like personal web shrines of the late 90s/early 2000s, without sacrificing modern build speeds.',
-      solution: 'Engineered an ultra-lean CMS that compiles markdown trees into hyper-optimized static bundles deployable to Cloudflare Pages in seconds.',
+      problem: 'Exploring how far you can push creative expression purely through web technologies — no heavy frameworks, just ideas and code.',
+      solution: 'A self-initiated creative build combining interactive UI elements with an original concept, designed as a playground for web experimentation.',
       architecture: [
-        'Unified / Remark markdown abstract syntax tree parser',
-        'Client-side instant full-text search index',
-        'Muted palette CSS custom property theme token engine'
+        'Vanilla JavaScript with custom interaction logic',
+        'Expressive CSS animations and micro-transitions',
+        'Lightweight and dependency-free build'
       ],
-      impact: 'Deployed across 12 personal project sites with 100% uptime on free tiers.'
+      impact: 'A reminder that the web is a creative medium — and that building just for fun is always worth it.'
     }
   },
   {
-    id: 'sentinel-audit',
-    title: 'CyberSentinel Compliance Scanner',
-    category: 'Systems & IT',
-    description: 'Automated SSL/TLS certificate health, DNSSEC validation, and open-port risk assessment scanner tailored for small-to-midsize tech stacks.',
-    highlight: 'Proactive SSL expiration alerts & header security grading.',
-    tags: ['Security', 'DNS/TLS', 'Node.js', 'REST API', 'Docker'],
-    metrics: 'Over 1,200 domains scanned • Grade A+ CSP validator',
-    iconName: 'Lock',
+    id: 'first-game',
+    title: 'First Game',
+    category: 'Creative Tech',
+    description: 'My very first game built in Godot following tutorials. A browser-playable platformer featuring a knight — a milestone project and the start of my game dev journey.',
+    highlight: 'My first published game — a Godot platformer playable in the browser.',
+    tags: ['Godot', 'GDScript', 'Platformer', 'Game Dev', 'HTML5'],
+    metrics: '4/5 ⭐ on itch.io • Browser playable',
+    iconName: 'Terminal',
+    demoUrl: 'https://reee4.itch.io/first-game',
     details: {
-      problem: 'Unexpected SSL certificate expirations and misconfigured security headers cause avoidable downtime and browser trust warnings.',
-      solution: 'Designed an asynchronous scanner that checks cert chains, cipher suites, HSTS headers, and DNS records with automated webhook reminders 30 days prior to expiration.',
+      problem: 'Wanted to learn game development from scratch — picking up Godot and committing to shipping something real, even if it was small.',
+      solution: 'Followed Godot tutorials to build a platformer with a knight character, then published it on itch.io as a playable HTML5 game to close the feedback loop.',
       architecture: [
-        'Direct TLS socket handshake inspection in Node.js',
-        'Automated scoring algorithm for HTTP security headers',
-        'Scheduled health probes with Discord and email webhook alerts'
+        'Godot Engine with GDScript for player controller and physics',
+        'Scene-based level design with tile maps',
+        'Exported as HTML5 for instant browser play on itch.io'
       ],
-      impact: 'Prevented critical downtime across client infrastructure deployments.'
+      impact: 'Rated 4 out of 5 stars on itch.io — a proud first step into game development that sparked the Comfort Food project.'
     }
   }
 ];

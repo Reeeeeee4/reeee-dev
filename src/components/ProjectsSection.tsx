@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { Activity, ShieldCheck, Sparkles, Terminal, FolderGit2, Lock, ArrowRight, ExternalLink } from 'lucide-react';
 import { PROJECTS, type Project } from '../data/portfolioData';
 import { ProjectModal } from './ProjectModal';
@@ -8,7 +8,7 @@ export const ProjectsSection: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [activeModalProject, setActiveModalProject] = useState<Project | null>(null);
 
-  const categories = ['All', 'Systems & IT', 'Web Apps', 'Creative Tech'];
+  const categories = ['All', 'Web Apps', 'Creative Tech'];
 
   const filteredProjects = selectedCategory === 'All'
     ? PROJECTS
@@ -45,10 +45,10 @@ export const ProjectsSection: React.FC = () => {
           </span>
         </div>
         <h2 style={{ fontSize: 'clamp(2rem, 4vw, 2.8rem)', marginBottom: '12px' }}>
-          Selected Projects &amp; Infrastructure
+          Projects, experiments &amp; happy accidents
         </h2>
         <p style={{ maxWidth: '600px', margin: '0 auto', color: 'var(--color-taupe-grey)', fontSize: '1.05rem' }}>
-          Production systems, automation utilities, and responsive web applications built for reliability and expressiveness.
+          A collection of projects, experiments, and ideas I've brought to life with code. From little automation tools to interactive games, this is where my technical side meets my creative one.
         </p>
       </div>
 
@@ -202,29 +202,31 @@ export const ProjectsSection: React.FC = () => {
                   padding: '4px 0',
                 }}
               >
-                <span>Architecture Spec</span>
+                <span>View Details</span>
                 <ArrowRight size={15} color="var(--color-old-rose)" />
               </button>
 
-              <a
-                href="https://github.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => soundEngine.playClick(800, 0.04)}
-                title="View Source on GitHub"
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '4px',
-                  fontSize: '0.8rem',
-                  fontFamily: 'var(--font-mono)',
-                  color: 'var(--color-taupe-grey)',
-                  textDecoration: 'none',
-                }}
-              >
-                <span>Code</span>
-                <ExternalLink size={13} />
-              </a>
+              {(project.githubUrl || project.demoUrl) ? (
+                <a
+                  href={project.demoUrl || project.githubUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => soundEngine.playClick(800, 0.04)}
+                  title={project.demoUrl ? 'Play on itch.io' : 'View Source on GitHub'}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '4px',
+                    fontSize: '0.8rem',
+                    fontFamily: 'var(--font-mono)',
+                    color: 'var(--color-taupe-grey)',
+                    textDecoration: 'none',
+                  }}
+                >
+                  <span>{project.demoUrl ? 'Play ↗' : 'Code ↗'}</span>
+                  <ExternalLink size={13} />
+                </a>
+              ) : null}
             </div>
 
           </div>
