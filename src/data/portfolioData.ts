@@ -17,10 +17,15 @@ export interface Project {
   iconName: string;
 }
 
+export interface SkillItem {
+  name: string;
+  description: string;
+}
+
 export interface SkillCategory {
   title: string;
   description: string;
-  skills: { name: string; level: number; tag: string }[];
+  skills: SkillItem[];
 }
 
 export interface ExperienceItem {
@@ -133,48 +138,52 @@ export const PROJECTS: Project[] = [
 
 export const SKILL_CATEGORIES: SkillCategory[] = [
   {
-    title: 'Systems & Infrastructure',
-    description: 'Hardened OS configuration, virtualization, and network architecture.',
+    title: 'Programming Languages & Development',
+    description: 'Building applications and exploring solutions across different programming paradigms.',
     skills: [
-      { name: 'Linux Administration (Ubuntu, Debian, RHEL)', level: 92, tag: 'OS' },
-      { name: 'Windows Server & Active Directory', level: 85, tag: 'IT' },
-      { name: 'Networking (DNS, DHCP, VLANs, WireGuard VPN)', level: 88, tag: 'Net' },
-      { name: 'Docker & Containerization', level: 86, tag: 'DevOps' },
-      { name: 'PowerShell & Bash Scripting', level: 90, tag: 'Automation' },
-      { name: 'Hardware Diagnostics & Systems Maintenance', level: 94, tag: 'Support' }
+      { name: 'C & Java', description: 'Programming fundamentals and problem-solving' },
+      { name: 'Python & R', description: 'Scripting, data analysis, and computational experiments' },
+      { name: 'JavaScript & PHP', description: 'Web development and application logic' },
+      { name: 'Kotlin', description: 'Android application development' },
+      { name: 'HTML5 & CSS3', description: 'Responsive layouts and modern web interfaces' },
+      { name: 'SQL', description: 'Relational database queries and data management' }
     ]
   },
   {
-    title: 'Web & Software Engineering',
-    description: 'Modern, resilient web development using TypeScript and component architecture.',
+    title: 'Web Development & Frameworks',
+    description: 'Developing responsive websites and web applications with practical development tools and frameworks.',
     skills: [
-      { name: 'React 19 & TypeScript', level: 95, tag: 'Frontend' },
-      { name: 'Node.js & Express API Development', level: 90, tag: 'Backend' },
-      { name: 'Vite & Build Tooling Architecture', level: 92, tag: 'Tooling' },
-      { name: 'Vanilla CSS, CSS Custom Properties & Responsive Design', level: 96, tag: 'Styling' },
-      { name: 'REST APIs & WebSocket Architecture', level: 88, tag: 'APIs' },
-      { name: 'Database Management (PostgreSQL, SQLite)', level: 82, tag: 'Data' }
+      { name: 'Laravel & PHP', description: 'Server-side web development' },
+      { name: 'WordPress', description: 'Website development and content management' },
+      { name: 'Bootstrap & jQuery', description: 'UI development and interactive web components' },
+      { name: 'Node.js & npm', description: 'JavaScript runtime and package management' },
+      { name: 'Vite', description: 'Frontend development and build tooling' },
+      { name: 'Git & GitHub', description: 'Version control and project collaboration' }
     ]
   },
   {
-    title: 'Cloud, Hosting & DevOps',
-    description: 'Zero-downtime deployment pipelines and serverless edge delivery.',
+    title: 'Databases, Cloud & Data Science',
+    description: 'Exploring data-driven applications, cloud services, and database technologies.',
     skills: [
-      { name: 'Cloudflare (Pages, Workers, DNS, Zero Trust)', level: 94, tag: 'Edge' },
-      { name: 'AWS Essentials (S3, EC2, IAM Security)', level: 82, tag: 'Cloud' },
-      { name: 'Git & GitHub Actions CI/CD Workflows', level: 90, tag: 'CI/CD' },
-      { name: 'Nginx Reverse Proxy & SSL/TLS Configuration', level: 87, tag: 'Web' },
-      { name: 'Automated Backup & Disaster Recovery', level: 89, tag: 'Reliability' }
+      { name: 'MySQL & MariaDB', description: 'Relational database management' },
+      { name: 'Google Cloud & Firebase', description: 'Cloud platform and application services' },
+      { name: 'Anaconda & NumPy', description: 'Python environments and numerical computing' },
+      { name: 'Pandas & Matplotlib', description: 'Data analysis and visualization' },
+      { name: 'Apache Spark', description: 'Big data processing' },
+      { name: 'Scikit-learn, TensorFlow & PyTorch', description: 'Machine learning tools' },
+      { name: 'PowerShell & Windows Terminal', description: 'Command-line workflows and scripting' }
     ]
   },
   {
-    title: 'Security & Creative Tech',
-    description: 'Zero-trust security practices paired with playful interactive coding.',
+    title: 'Creative Technology & Design',
+    description: 'Combining technical problem-solving with visual design and interactive experiences.',
     skills: [
-      { name: 'IT Security Auditing & Access Control (IAM)', level: 85, tag: 'Security' },
-      { name: 'HTML5 Canvas & Generative Math Experiments', level: 88, tag: 'Creative' },
-      { name: 'Web Audio API & Sound Synthesis', level: 84, tag: 'Audio' },
-      { name: 'UX Micro-Interactions & Accessible UI', level: 91, tag: 'Design' }
+      { name: 'Godot Engine', description: 'Game development and interactive prototypes' },
+      { name: 'HTML5 Canvas', description: 'Browser-based graphics and visual experiments' },
+      { name: 'Figma & Canva', description: 'Interface design and visual content' },
+      { name: 'GIMP, Krita & Sketch', description: 'Image editing and digital graphics' },
+      { name: 'Power BI', description: 'Data visualization and reporting' },
+      { name: 'Itch.io', description: 'Publishing and showcasing game projects' }
     ]
   }
 ];
