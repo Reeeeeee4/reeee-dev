@@ -1,13 +1,15 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { ArrowLeft, Sparkles, Paintbrush, Eraser, Download, Trash2, Music, Type, Wand2, Play, Copy, Check } from 'lucide-react';
+import { ArrowLeft, Sparkles, Paintbrush, Eraser, Download, Trash2, Music, Type, Wand2, Play, Copy, Check, LayoutGrid, Star, Moon, Cat } from 'lucide-react';
 import { soundEngine } from '../utils/audio';
+import { CosmicOracle, MeowKitchen, MemoryMatch, StarCatcher } from './LabMiniGames';
 
 interface LabPageProps {
   onBackToHome?: () => void;
 }
 
 export const LabPage: React.FC<LabPageProps> = ({ onBackToHome }) => {
-  const [activeTab, setActiveTab] = useState<'pixel' | 'chimes' | 'ascii' | 'physics'>('pixel');
+  type LabTab = 'pixel' | 'chimes' | 'ascii' | 'physics' | 'memory' | 'stars' | 'oracle' | 'meow';
+  const [activeTab, setActiveTab] = useState<LabTab>('pixel');
 
   // ==========================================
   // MINI-APP 1: RETRO PIXEL CANVAS (16x16)
@@ -332,18 +334,22 @@ export const LabPage: React.FC<LabPageProps> = ({ onBackToHome }) => {
         <h1 style={{ fontSize: 'clamp(1.8rem, 4.5vw, 3.2rem)', marginBottom: '8px' }}>
           reeee.dev Creative Lab
         </h1>
-        <p style={{ maxWidth: '600px', margin: '0 auto', color: 'var(--color-taupe-grey)', fontSize: 'clamp(0.9rem, 2vw, 1.05rem)', lineHeight: 1.5 }}>
-          Interactive web experiments, real-time sound synthesizers, and procedural canvas toys crafted in TypeScript.
+        <p style={{ maxWidth: '640px', margin: '0 auto', color: 'var(--color-taupe-grey)', fontSize: 'clamp(0.9rem, 2vw, 1.05rem)', lineHeight: 1.5 }}>
+          Interactive toys you can play in the browser: pixel art, chimes, matching games, star catching, a tiny horoscope oracle, and a cozy clicker.
         </p>
       </div>
 
       {/* Lab Sub-Nav Navigation */}
       <div className="lab-subnav-grid">
         {[
-          { id: 'pixel', label: '1. Retro Pixel Studio', shortLabel: 'Pixel Studio', icon: Paintbrush },
-          { id: 'chimes', label: '2. Melody Chime Box', shortLabel: 'Chime Box', icon: Music },
-          { id: 'ascii', label: '3. ASCII & Y2K Styler', shortLabel: 'ASCII Styler', icon: Type },
-          { id: 'physics', label: '4. Sparkle Gravity Toy', shortLabel: 'Gravity Toy', icon: Wand2 },
+          { id: 'pixel', label: '1. Retro Pixel Studio', shortLabel: 'Pixels', icon: Paintbrush },
+          { id: 'chimes', label: '2. Melody Chime Box', shortLabel: 'Chimes', icon: Music },
+          { id: 'ascii', label: '3. ASCII & Y2K Styler', shortLabel: 'ASCII', icon: Type },
+          { id: 'physics', label: '4. Sparkle Gravity Toy', shortLabel: 'Gravity', icon: Wand2 },
+          { id: 'memory', label: '5. Memory Match', shortLabel: 'Memory', icon: LayoutGrid },
+          { id: 'stars', label: '6. Star Catcher', shortLabel: 'Stars', icon: Star },
+          { id: 'oracle', label: '7. Cosmic Oracle', shortLabel: 'Oracle', icon: Moon },
+          { id: 'meow', label: '8. Meow Kitchen', shortLabel: 'Meow', icon: Cat },
         ].map((item) => {
           const isActive = activeTab === item.id;
           const Icon = item.icon;
@@ -352,7 +358,7 @@ export const LabPage: React.FC<LabPageProps> = ({ onBackToHome }) => {
               key={item.id}
               onClick={() => {
                 soundEngine.playClick(750, 0.04);
-                setActiveTab(item.id as typeof activeTab);
+                setActiveTab(item.id as LabTab);
               }}
               className="lab-tab-btn"
               style={{
@@ -815,6 +821,30 @@ export const LabPage: React.FC<LabPageProps> = ({ onBackToHome }) => {
         </div>
       )}
 
+      {activeTab === 'memory' && (
+        <div className="lab-card lab-card-wide">
+          <MemoryMatch />
+        </div>
+      )}
+
+      {activeTab === 'stars' && (
+        <div className="lab-card lab-card-wide">
+          <StarCatcher />
+        </div>
+      )}
+
+      {activeTab === 'oracle' && (
+        <div className="lab-card lab-card-wide">
+          <CosmicOracle />
+        </div>
+      )}
+
+      {activeTab === 'meow' && (
+        <div className="lab-card lab-card-wide">
+          <MeowKitchen />
+        </div>
+      )}
+
       {/* Embedded Responsive Styles for Creative Lab */}
       <style>{`
         .lab-container {
@@ -834,6 +864,8 @@ export const LabPage: React.FC<LabPageProps> = ({ onBackToHome }) => {
         .lab-tab-btn {
           padding: 8px 16px;
           font-size: 0.88rem;
+          min-height: 44px;
+          touch-action: manipulation;
         }
 
         .lab-tab-label-short {
@@ -852,6 +884,170 @@ export const LabPage: React.FC<LabPageProps> = ({ onBackToHome }) => {
           border: var(--border-retro);
           border-radius: var(--radius-md);
           box-shadow: var(--shadow-retro);
+        }
+
+        .lab-card-wide {
+          max-width: 860px;
+        }
+
+        .lab-memory-grid {
+          display: grid;
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+          gap: 8px;
+        }
+
+        .lab-memory-card {
+          aspect-ratio: 1 / 1;
+          min-height: 56px;
+          border: 2px solid var(--color-taupe-grey);
+          border-radius: var(--radius-md);
+          box-shadow: 2px 2px 0 var(--color-taupe-grey);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          touch-action: manipulation;
+          font-size: 1.2rem;
+        }
+
+        .lab-star-stage {
+          position: relative;
+          width: 100%;
+          height: clamp(240px, 48vh, 380px);
+          overflow: hidden;
+          border: 2px solid var(--color-taupe-grey);
+          border-radius: var(--radius-md);
+          box-shadow: 3px 3px 0 var(--color-taupe-grey);
+          background:
+            radial-gradient(circle at 20% 20%, rgba(219, 127, 142, 0.22), transparent 40%),
+            radial-gradient(circle at 80% 70%, rgba(157, 163, 164, 0.25), transparent 45%),
+            var(--color-soft-blush);
+          touch-action: none;
+        }
+
+        .lab-star-empty {
+          position: absolute;
+          inset: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          text-align: center;
+          padding: 16px;
+          font-family: var(--font-display);
+          font-weight: 700;
+          color: var(--color-taupe-grey);
+          pointer-events: none;
+        }
+
+        .lab-falling-star {
+          position: absolute;
+          transform: translate(-50%, -50%);
+          border: 2px solid var(--color-taupe-grey);
+          border-radius: 50%;
+          background: var(--color-old-rose);
+          color: var(--color-soft-blush);
+          font-size: 1rem;
+          box-shadow: 2px 2px 0 var(--color-taupe-grey);
+          cursor: pointer;
+          touch-action: manipulation;
+        }
+
+        .lab-oracle-grid {
+          display: grid;
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+          gap: 8px;
+          margin-bottom: 14px;
+        }
+
+        .lab-oracle-sign {
+          min-height: 52px;
+          padding: 8px 6px;
+          border: 2px solid var(--color-taupe-grey);
+          border-radius: var(--radius-md);
+          box-shadow: 2px 2px 0 var(--color-taupe-grey);
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 2px;
+          font-family: var(--font-display);
+          font-weight: 700;
+          font-size: 0.78rem;
+          cursor: pointer;
+          touch-action: manipulation;
+        }
+
+        .lab-oracle-card {
+          padding: 16px;
+          border: 2px solid var(--color-taupe-grey);
+          border-radius: var(--radius-md);
+          background: var(--color-soft-blush);
+          box-shadow: 3px 3px 0 var(--color-taupe-grey);
+          min-height: 120px;
+        }
+
+        .lab-oracle-card.is-spinning {
+          opacity: 0.55;
+        }
+
+        .lab-meow-stage {
+          width: 100%;
+          min-height: 180px;
+          margin-bottom: 14px;
+          padding: 20px 16px;
+          border: 2px solid var(--color-taupe-grey);
+          border-radius: var(--radius-md);
+          box-shadow: 3px 3px 0 var(--color-taupe-grey);
+          background: var(--color-soft-blush);
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          cursor: pointer;
+          touch-action: manipulation;
+          color: var(--color-taupe-grey);
+        }
+
+        .lab-meow-face {
+          font-size: clamp(3rem, 10vw, 4.4rem);
+          line-height: 1;
+        }
+
+        .lab-meow-caption {
+          font-family: var(--font-display);
+          font-weight: 800;
+          text-align: center;
+          font-size: clamp(0.95rem, 2.6vw, 1.15rem);
+        }
+
+        .lab-meow-hint {
+          font-family: var(--font-mono);
+          font-size: 0.75rem;
+        }
+
+        .lab-meow-stage.is-bounce .lab-meow-face {
+          transform: scale(1.12);
+        }
+
+        .lab-upgrade-grid {
+          display: grid;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 8px;
+        }
+
+        .lab-upgrade-card {
+          min-height: 88px;
+          padding: 12px 10px;
+          border: 2px solid var(--color-taupe-grey);
+          border-radius: var(--radius-md);
+          box-shadow: 2px 2px 0 var(--color-taupe-grey);
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+          text-align: left;
+          font-family: var(--font-display);
+          touch-action: manipulation;
         }
 
         /* Chime Keys Grid: 8 on desktop, 4x2 on mobile */
@@ -892,20 +1088,26 @@ export const LabPage: React.FC<LabPageProps> = ({ onBackToHome }) => {
         /* Mobile specific adjustments (<= 640px) */
         @media (max-width: 640px) {
           .lab-container {
-            padding: 20px 12px 60px;
+            padding: 16px 10px 72px;
           }
 
           .lab-subnav-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
+            display: flex;
+            flex-wrap: nowrap;
+            justify-content: flex-start;
             gap: 6px;
-            margin-bottom: 22px;
+            margin: 0 -10px 22px;
+            padding: 2px 10px 10px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scroll-snap-type: x proximity;
           }
 
           .lab-tab-btn {
-            padding: 8px 10px;
+            padding: 10px 12px;
             font-size: 0.78rem;
-            width: 100%;
+            flex: 0 0 auto;
+            scroll-snap-align: start;
           }
 
           .lab-tab-label-full {
@@ -948,6 +1150,28 @@ export const LabPage: React.FC<LabPageProps> = ({ onBackToHome }) => {
           .chime-presets-buttons button {
             width: 100%;
             justify-content: center;
+          }
+
+          .lab-oracle-grid {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+          }
+
+          .lab-upgrade-grid {
+            grid-template-columns: 1fr;
+          }
+
+          .lab-memory-grid {
+            gap: 6px;
+          }
+
+          .lab-memory-card {
+            min-height: 64px;
+          }
+        }
+
+        @media (max-width: 420px) {
+          .lab-oracle-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
           }
         }
       `}</style>
