@@ -852,21 +852,30 @@ export const LabPage: React.FC<LabPageProps> = ({ onBackToHome }) => {
           margin: 0 auto;
           padding: 30px 20px 80px;
         }
-
+        
         .lab-subnav-grid {
-          display: flex;
-          flex-wrap: wrap;
-          justify-content: center;
+          display: grid;
+          grid-template-columns: repeat(4, minmax(0, 1fr));
           gap: 8px;
           margin-bottom: 28px;
         }
 
-        .lab-tab-btn {
-          padding: 8px 16px;
-          font-size: 0.88rem;
-          min-height: 44px;
-          touch-action: manipulation;
+        .lab-subnav-grid > * {
+          width: 100%;
+          min-width: 0;
+          box-sizing: border-box;
         }
+
+        .lab-tab-btn {
+          padding: 8px 10px;
+          font-size: 0.82rem;
+          min-height: 44px;
+          min-width: 0;
+          width: 100%;
+          white-space: normal;
+          text-align: center;
+          touch-action: manipulation;
+      }
 
         .lab-tab-label-short {
           display: none;
