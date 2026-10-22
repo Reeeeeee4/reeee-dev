@@ -24,11 +24,12 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
     <footer style={{
       borderTop: '2px solid var(--color-taupe-grey)',
       backgroundColor: 'var(--color-pale-slate)',
-      padding: '48px 24px 36px',
+      padding: '48px 0 36px',
+      width: '100%',
     }}>
       <div style={{
-        maxWidth: '1200px',
-        margin: '0 auto',
+        width: '100%',
+        margin: 0,
         display: 'flex',
         flexDirection: 'column',
         gap: '36px',
@@ -36,44 +37,67 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
         {/* Top Section */}
         <div style={{
           display: 'flex',
-          flexWrap: 'wrap',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          gap: '24px',
+          flexDirection: 'column',
+          gap: '20px',
+          width: '100%',
         }}>
-          {/* Brand & Wordmark */}
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-              <span style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: '28px',
-                height: '28px',
-                borderRadius: '8px',
-                backgroundColor: 'var(--color-old-rose)',
-                color: 'var(--color-soft-blush)',
-                border: '1.5px solid var(--color-taupe-grey)',
-              }}>
-                <Sparkles size={16} />
-              </span>
-              <span style={{
-                fontFamily: 'var(--font-display)',
-                fontSize: '1.6rem',
-                fontWeight: 800,
-                color: 'var(--color-taupe-grey)',
-                letterSpacing: '-0.02em',
-              }}>
-                reeee.dev
-              </span>
+          <div style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            alignItems: 'flex-start',
+            justifyContent: 'space-between',
+            gap: '16px',
+            padding: '0 12px',
+          }}>
+            {/* Brand & Wordmark */}
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                <span style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '28px',
+                  height: '28px',
+                  borderRadius: '8px',
+                  backgroundColor: 'var(--color-old-rose)',
+                  color: 'var(--color-soft-blush)',
+                  border: '1.5px solid var(--color-taupe-grey)',
+                }}>
+                  <Sparkles size={16} />
+                </span>
+                <span style={{
+                  fontFamily: 'var(--font-display)',
+                  fontSize: '1.6rem',
+                  fontWeight: 800,
+                  color: 'var(--color-taupe-grey)',
+                  letterSpacing: '-0.02em',
+                }}>
+                  reeee.dev
+                </span>
+              </div>
+              <p style={{ fontSize: '0.88rem', color: 'var(--color-taupe-grey)', maxWidth: '420px', lineHeight: 1.5 }}>
+                Personal IT systems &amp; web developer portfolio. Handcrafted with React, Vite &amp; TypeScript.
+              </p>
             </div>
-            <p style={{ fontSize: '0.88rem', color: 'var(--color-taupe-grey)', maxWidth: '420px', lineHeight: 1.5 }}>
-              Personal IT systems &amp; web developer portfolio. Handcrafted with React, Vite &amp; TypeScript.
-            </p>
+
+            {/* Back to Top Button */}
+            <button
+              onClick={scrollToTop}
+              className="retro-btn retro-btn-secondary"
+              style={{ padding: '8px 16px', fontSize: '0.85rem', flexShrink: 0 }}
+              title="Scroll to top of page"
+            >
+              <ArrowUp size={15} /> Top
+            </button>
           </div>
 
-          {/* Quick Links */}
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', alignItems: 'center' }}>
+          {/* Quick Links — full-width stretched menu */}
+          <div style={{
+            display: 'flex',
+            width: '100%',
+            alignItems: 'center',
+            justifyContent: 'space-evenly',
+          }}>
             {['Home', 'Projects', 'IT Skills', 'Experience', 'Creative Lab', 'Contact'].map((item) => {
               const id = item.toLowerCase().replace(/[^a-z]/g, '');
               const targetId = id.includes('creative') ? 'lab' : id.includes('itskills') ? 'skills' : id;
@@ -92,7 +116,9 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                     background: 'none',
                     border: 'none',
                     cursor: 'pointer',
-                    padding: '4px 6px',
+                    padding: '8px 4px',
+                    flex: 1,
+                    textAlign: 'center',
                     transition: 'color 0.15s ease',
                   }}
                 >
@@ -101,16 +127,6 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               );
             })}
           </div>
-
-          {/* Back to Top Button */}
-          <button
-            onClick={scrollToTop}
-            className="retro-btn retro-btn-secondary"
-            style={{ padding: '8px 16px', fontSize: '0.85rem' }}
-            title="Scroll to top of page"
-          >
-            <ArrowUp size={15} /> Top
-          </button>
         </div>
 
         {/* Brand Colour Palette Swatches Row */}
@@ -120,6 +136,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
           alignItems: 'center',
           justifyContent: 'space-between',
           gap: '16px',
+          margin: '0 12px',
           padding: '16px 20px',
           backgroundColor: 'var(--color-soft-blush)',
           borderRadius: 'var(--radius-md)',
@@ -170,6 +187,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
           alignItems: 'center',
           justifyContent: 'space-between',
           gap: '12px',
+          margin: '0 12px',
           paddingTop: '20px',
           borderTop: '1px solid rgba(96, 77, 83, 0.2)',
           fontSize: '0.8rem',
