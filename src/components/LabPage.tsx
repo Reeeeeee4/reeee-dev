@@ -1101,22 +1101,32 @@ export const LabPage: React.FC<LabPageProps> = ({ onBackToHome }) => {
           }
 
           .lab-subnav-grid {
-            display: flex;
-            flex-wrap: nowrap;
-            justify-content: flex-start;
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
             gap: 6px;
-            margin: 0 -10px 22px;
-            padding: 2px 10px 10px;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            scroll-snap-type: x proximity;
+            margin: 0 0 22px;
+            padding: 0;
+            overflow: visible;
           }
 
           .lab-tab-btn {
-            padding: 10px 12px;
-            font-size: 0.78rem;
-            flex: 0 0 auto;
-            scroll-snap-align: start;
+            padding: 7px 3px;
+            font-size: 0.68rem;
+            min-height: 36px;
+            min-width: 0;
+            width: 100%;
+            gap: 3px;
+            border-width: 1px;
+            border-radius: 12px;
+            white-space: normal;
+            text-align: center;
+            justify-content: center;
+          }
+
+          .lab-tab-btn svg {
+            width: 12px;
+            height: 12px;
+            flex-shrink: 0;
           }
 
           .lab-tab-label-full {
