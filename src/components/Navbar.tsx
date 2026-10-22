@@ -36,20 +36,18 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, onNavigate }) => {
       position: 'sticky',
       top: 0,
       zIndex: 100,
-      width: '100%',
       backgroundColor: 'rgba(255, 219, 218, 0.95)',
       backdropFilter: 'blur(10px)',
       borderBottom: '2px solid var(--color-taupe-grey)',
       boxShadow: '0 4px 12px rgba(96, 77, 83, 0.08)'
     }}>
       <div style={{
-        width: '100%',
-        margin: 0,
-        padding: '10px 0',
+        maxWidth: '1200px',
+        margin: '0 auto',
+        padding: '10px 18px',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        gap: '4px',
       }}>
         {/* Brand Wordmark Logo */}
         <button
@@ -62,7 +60,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, onNavigate }) => {
             background: 'none',
             border: 'none',
             cursor: 'pointer',
-            padding: '2px 8px',
+            padding: '2px 4px',
           }}
           title="reeee.dev home"
         >
@@ -95,10 +93,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, onNavigate }) => {
         <nav style={{
           display: 'none',
           alignItems: 'center',
-          justifyContent: 'space-evenly',
-          flex: 1,
-          minWidth: 0,
-          gap: '4px',
+          gap: '6px',
         }} className="desktop-nav">
           {navItems.map((item) => {
             const isActive = activeTab === item.id;
@@ -110,10 +105,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, onNavigate }) => {
                   fontFamily: 'var(--font-display)',
                   fontWeight: 700,
                   fontSize: '0.9rem',
-                  padding: '7px 10px',
-                  flex: 1,
-                  textAlign: 'center',
-                  whiteSpace: 'nowrap',
+                  padding: '7px 13px',
                   borderRadius: 'var(--radius-full)',
                   border: isActive ? '2px solid var(--color-taupe-grey)' : '2px solid transparent',
                   backgroundColor: isActive ? 'var(--color-old-rose)' : 'transparent',
@@ -130,7 +122,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, onNavigate }) => {
         </nav>
 
         {/* Actions: Audio Toggle & Quick Status */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', paddingRight: '8px', flexShrink: 0 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           {/* Sound Toggle */}
           <button
             onClick={toggleSound}
