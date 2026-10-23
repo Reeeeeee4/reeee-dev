@@ -13,6 +13,7 @@ export const ContactSection: React.FC = () => {
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const [turnstileKey, setTurnstileKey] = useState(0);
   const [turnstileReady, setTurnstileReady] = useState(false);
+  const [isCheckingTurnstile, setIsCheckingTurnstile] = useState(false);
 
   const handleCopyEmail = () => {
     soundEngine.playSparkle();
@@ -21,7 +22,8 @@ export const ContactSection: React.FC = () => {
     setTimeout(() => setCopied(false), 2400);
   };
 
-  const isVerificationLoading = !turnstileReady;
+  const isInitialTurnstileLoading = !turnstileReady;
+  const isVerificationLoading = isInitialTurnstileLoading || isCheckingTurnstile;
 
   const handleVerifyHuman = () => {
     if (!turnstileRef.current || !turnstileReady) {
@@ -30,6 +32,7 @@ export const ContactSection: React.FC = () => {
     }
 
     setErrorMessage('');
+    setIsCheckingTurnstile(true);
     turnstileRef.current.execute();
   };
 
@@ -347,7 +350,11 @@ export const ContactSection: React.FC = () => {
                   fontWeight: 700,
                 }}>
                   <LoaderCircle size={14} className="turnstile-loader" />
-                  <span>Verification is still loading. Please try again in a moment.</span>
+                  <span>
+                    {isInitialTurnstileLoading
+                      ? 'Verification is still loading. Please try again in a moment.'
+                      : 'Checking that you are human...'}
+                  </span>
                 </div>
               )}
 
@@ -365,15 +372,18 @@ export const ContactSection: React.FC = () => {
                 onWidgetLoad={() => setTurnstileReady(true)}
                 onSuccess={(token) => {
                   setTurnstileToken(token);
+                  setIsCheckingTurnstile(false);
                   setErrorMessage('');
                   setStatus('idle');
                 }}
                 onExpire={() => {
                   setTurnstileToken(null);
+                  setIsCheckingTurnstile(false);
                   setErrorMessage('Verification expired. Please verify again.');
                 }}
                 onError={() => {
                   setTurnstileToken(null);
+                  setIsCheckingTurnstile(false);
                   setErrorMessage('Verification failed. Please try again.');
                 }}
               />
@@ -399,12 +409,12 @@ export const ContactSection: React.FC = () => {
                   type="checkbox"
                   checked={Boolean(turnstileToken)}
                   onChange={handleVerifyHuman}
-                  disabled={!turnstileReady || status === 'submitting' || turnstileToken !== null}
+                  disabled={!turnstileReady || isCheckingTurnstile || status === 'submitting' || turnstileToken !== null}
                   style={{
                     width: '18px',
                     height: '18px',
                     accentColor: 'var(--color-old-rose)',
-                    cursor: !turnstileReady || status === 'submitting' || turnstileToken !== null ? 'not-allowed' : 'pointer',
+                    cursor: !turnstileReady || isCheckingTurnstile || status === 'submitting' || turnstileToken !== null ? 'not-allowed' : 'pointer',
                   }}
                 />
                 <span style={{
@@ -418,7 +428,7 @@ export const ContactSection: React.FC = () => {
                   textTransform: 'none',
                   letterSpacing: '0.02em',
                 }}>
-                  {isVerificationLoading ? 'Loading...' : turnstileToken ? 'Verified' : 'I am human'}
+                  {isInitialTurnstileLoading ? 'Loading...' : isCheckingTurnstile ? 'Checking...' : turnstileToken ? 'Verified' : 'I am human'}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
