@@ -62,6 +62,84 @@ export const App: React.FC = () => {
     }
   }, []);
 
+  // Subtle retro ambient motion for the background accents
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const hasPointer = window.matchMedia('(pointer: fine)').matches;
+    const layers = Array.from(document.querySelectorAll('.float-retro-layer')) as HTMLElement[];
+    if (!layers.length) return;
+
+    let pointerX = 50;
+    let pointerY = 50;
+    let currentX = 50;
+    let currentY = 50;
+    let scrollY = window.scrollY || 0;
+    let rafId = 0;
+
+    const animate = () => {
+      currentX += (pointerX - currentX) * 0.08;
+      currentY += (pointerY - currentY) * 0.08;
+
+      layers.forEach((layer, index) => {
+        const speed = (index + 1) * 0.22;
+        const driftX = ((currentX - 50) * speed * 1.3);
+        const driftY = ((currentY - 50) * speed * 0.8) + (scrollY * (0.04 + index * 0.015)) + Math.sin((performance.now() * 0.001) + index) * 8;
+        const rotate = ((currentX - 50) * 0.18) + index * 8;
+        layer.style.transform = `translate(${driftX}px, ${driftY}px) rotate(${rotate}deg)`;
+      });
+
+      rafId = window.requestAnimationFrame(animate);
+    };
+
+    const handlePointerMove = (event: PointerEvent) => {
+      pointerX = (event.clientX / window.innerWidth) * 100;
+      pointerY = (event.clientY / window.innerHeight) * 100;
+    };
+
+    const handleScroll = () => {
+      scrollY = window.scrollY || 0;
+    };
+
+    if (hasPointer) {
+      window.addEventListener('pointermove', handlePointerMove);
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    rafId = window.requestAnimationFrame(animate);
+
+    return () => {
+      if (hasPointer) {
+        window.removeEventListener('pointermove', handlePointerMove);
+      }
+      window.removeEventListener('scroll', handleScroll);
+      window.cancelAnimationFrame(rafId);
+    };
+  }, []);
+
+  // Scroll-triggered reveal animation for retro cards
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const revealCards = Array.from(document.querySelectorAll('.retro-box')) as HTMLElement[];
+    if (!revealCards.length) return;
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+        }
+      });
+    }, {
+      threshold: 0.12,
+      rootMargin: '0px 0px -8% 0px',
+    });
+
+    revealCards.forEach((card) => observer.observe(card));
+
+    return () => observer.disconnect();
+  }, []);
+
   const navigateTo = (tab: string) => {
     if (tab === 'lab') {
       // Update browser URL to /creative-lab so Back button works

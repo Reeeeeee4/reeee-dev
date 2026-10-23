@@ -32,7 +32,7 @@ export const Y2KBackground: React.FC = () => {
 
       {/* 2. Sparkle Cluster (Top Center-Right) */}
       <div
-        className="y2k-shimmer"
+        className="float-retro-layer y2k-shimmer"
         style={{
           position: 'absolute',
           top: '6%',
@@ -53,7 +53,7 @@ export const Y2KBackground: React.FC = () => {
 
       {/* 3. Retro Wireframe Cyber Globe (Top Right behind Hero) */}
       <svg
-        className="y2k-spin-slow"
+        className="float-retro-layer y2k-spin-slow"
         style={{
           position: 'absolute',
           top: '14%',
@@ -208,7 +208,7 @@ export const Y2KBackground: React.FC = () => {
         color: 'var(--color-old-rose)',
         opacity: 0.3,
         fontSize: '24px',
-      }} className="y2k-shimmer">
+      }} className="float-retro-layer y2k-shimmer">
         ✦
       </div>
       <div style={{
@@ -218,7 +218,7 @@ export const Y2KBackground: React.FC = () => {
         color: 'var(--color-taupe-grey)',
         opacity: 0.25,
         fontSize: '20px',
-      }} className="y2k-drift">
+      }} className="float-retro-layer y2k-drift">
         ✧
       </div>
       <div style={{
@@ -228,7 +228,7 @@ export const Y2KBackground: React.FC = () => {
         color: 'var(--color-old-rose)',
         opacity: 0.35,
         fontSize: '26px',
-      }} className="y2k-float-slow">
+      }} className="float-retro-layer y2k-float-slow">
         ✦
       </div>
     </div>
