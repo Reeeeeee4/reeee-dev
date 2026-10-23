@@ -1,22 +1,35 @@
-﻿import React, { useState } from 'react';
+﻿import React, { useRef, useState } from 'react';
 import { Mail, Copy, Check, Send, Sparkles, Shield, Clock, MapPin } from 'lucide-react';
 import { PORTFOLIO_INFO } from '../data/portfolioData';
 import { soundEngine } from '../utils/audio';
 import { Turnstile } from '@marsidev/react-turnstile';
 
 export const ContactSection: React.FC = () => {
+  const turnstileRef = useRef<any>(null);
   const [copied, setCopied] = useState(false);
   const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const [turnstileKey, setTurnstileKey] = useState(0);
+  const [turnstileReady, setTurnstileReady] = useState(false);
 
   const handleCopyEmail = () => {
     soundEngine.playSparkle();
     navigator.clipboard.writeText(PORTFOLIO_INFO.email);
     setCopied(true);
     setTimeout(() => setCopied(false), 2400);
+  };
+
+  const handleVerifyHuman = () => {
+    if (!turnstileRef.current || !turnstileReady) {
+      setStatus('error');
+      setErrorMessage('Verification is still loading. Please try again in a moment.');
+      return;
+    }
+
+    setErrorMessage('');
+    turnstileRef.current.execute();
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -319,16 +332,90 @@ export const ContactSection: React.FC = () => {
               )}
 
               <Turnstile
+                ref={turnstileRef}
                 key={turnstileKey}
+                className="turnstile-hidden"
                 siteKey={import.meta.env.VITE_TURNSTILE_SITE_KEY}
+                options={{
+                  theme: 'light',
+                  size: 'invisible',
+                  appearance: 'always',
+                  execution: 'execute',
+                }}
+                onWidgetLoad={() => setTurnstileReady(true)}
                 onSuccess={(token) => {
                   setTurnstileToken(token);
                   setErrorMessage('');
                   setStatus('idle');
                 }}
-                onExpire={() => setTurnstileToken(null)}
-                onError={() => setTurnstileToken(null)}
+                onExpire={() => {
+                  setTurnstileToken(null);
+                  setErrorMessage('Verification expired. Please verify again.');
+                }}
+                onError={() => {
+                  setTurnstileToken(null);
+                  setErrorMessage('Verification failed. Please try again.');
+                }}
               />
+
+              <label
+                className="retro-checkbox-wrap"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'flex-start',
+                  gap: '10px',
+                  marginTop: '6px',
+                  padding: '0',
+                  background: 'transparent',
+                  border: 'none',
+                  borderRadius: '0',
+                  cursor: status === 'submitting' || turnstileToken !== null ? 'default' : 'pointer',
+                  opacity: status === 'submitting' ? 0.8 : 1,
+                }}
+              >
+                <input
+                  type="checkbox"
+                  checked={Boolean(turnstileToken)}
+                  onChange={handleVerifyHuman}
+                  disabled={status === 'submitting' || turnstileToken !== null}
+                  style={{
+                    width: '18px',
+                    height: '18px',
+                    accentColor: 'var(--color-old-rose)',
+                    cursor: status === 'submitting' || turnstileToken !== null ? 'default' : 'pointer',
+                  }}
+                />
+                <span style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  fontFamily: 'var(--font-mono)',
+                  fontWeight: 700,
+                  color: 'var(--color-taupe-grey)',
+                  fontSize: '0.8rem',
+                  textTransform: 'none',
+                  letterSpacing: '0.02em',
+                }}>
+                  I am human
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    style={{ display: 'block' }}
+                  >
+                    <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" />
+                    <path d="M6.376 18.91a6 6 0 0 1 11.249.003" />
+                    <circle cx="12" cy="11" r="4" />
+                  </svg>
+                </span>
+              </label>
 
               <button
                 type="submit"
@@ -347,6 +434,21 @@ export const ContactSection: React.FC = () => {
       </div>
 
       <style>{`
+        .turnstile-hidden {
+          display: none !important;
+          visibility: hidden !important;
+          opacity: 0 !important;
+          pointer-events: none !important;
+        }
+
+        .retro-checkbox-wrap {
+          transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.2s ease;
+        }
+
+        .retro-checkbox-wrap:hover {
+          transform: translateY(-1px);
+        }
+
         @media (min-width: 820px) {
           .contact-grid {
             grid-template-columns: 0.9fr 1.1fr !important;
