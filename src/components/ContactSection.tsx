@@ -6,7 +6,8 @@ import { soundEngine } from '../utils/audio';
 export const ContactSection: React.FC = () => {
   const [copied, setCopied] = useState(false);
   const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
-  const [status, setStatus] = useState<'idle' | 'submitting' | 'success'>('idle');
+  const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleCopyEmail = () => {
     soundEngine.playSparkle();
@@ -15,19 +16,42 @@ export const ContactSection: React.FC = () => {
     setTimeout(() => setCopied(false), 2400);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.email || !formData.message) return;
+    if (!formData.name || !formData.email || !formData.message) return;
 
     soundEngine.playClick(800, 0.05);
     setStatus('submitting');
+    setErrorMessage('');
 
-    setTimeout(() => {
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          subject: formData.subject,
+          message: formData.message,
+        }),
+      });
+
+      const result = await response.json().catch(() => ({ success: false }));
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.error || 'Unable to send message right now.');
+      }
+
       soundEngine.playSparkle();
       setStatus('success');
       setFormData({ name: '', email: '', subject: '', message: '' });
       setTimeout(() => setStatus('idle'), 4000);
-    }, 700);
+    } catch (error) {
+      setStatus('error');
+      setErrorMessage(error instanceof Error ? error.message : 'Unable to send message right now.');
+    }
   };
 
   return (
@@ -260,6 +284,19 @@ export const ContactSection: React.FC = () => {
                   }}
                 />
               </div>
+
+              {status === 'error' && (
+                <div style={{
+                  padding: '10px 12px',
+                  backgroundColor: 'rgba(255, 115, 115, 0.12)',
+                  border: '1px solid rgba(255, 115, 115, 0.5)',
+                  borderRadius: 'var(--radius-sm)',
+                  color: '#8a2f2f',
+                  fontSize: '0.82rem',
+                }}>
+                  {errorMessage}
+                </div>
+              )}
 
               <button
                 type="submit"
