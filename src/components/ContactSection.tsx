@@ -1,5 +1,5 @@
 ﻿import React, { useRef, useState } from 'react';
-import { Mail, Copy, Check, Send, Sparkles, Shield, Clock, MapPin } from 'lucide-react';
+import { Mail, Copy, Check, Send, Sparkles, Shield, Clock, MapPin, LoaderCircle } from 'lucide-react';
 import { PORTFOLIO_INFO } from '../data/portfolioData';
 import { soundEngine } from '../utils/audio';
 import { Turnstile } from '@marsidev/react-turnstile';
@@ -21,9 +21,10 @@ export const ContactSection: React.FC = () => {
     setTimeout(() => setCopied(false), 2400);
   };
 
+  const isVerificationLoading = !turnstileReady;
+
   const handleVerifyHuman = () => {
     if (!turnstileRef.current || !turnstileReady) {
-      setStatus('error');
       setErrorMessage('Verification is still loading. Please try again in a moment.');
       return;
     }
@@ -331,6 +332,25 @@ export const ContactSection: React.FC = () => {
                 </div>
               )}
 
+              {isVerificationLoading && (
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  padding: '10px 12px',
+                  backgroundColor: 'rgba(255, 219, 218, 0.7)',
+                  border: '1px solid var(--color-taupe-grey)',
+                  borderRadius: 'var(--radius-sm)',
+                  color: 'var(--color-taupe-grey)',
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: '0.8rem',
+                  fontWeight: 700,
+                }}>
+                  <LoaderCircle size={14} className="turnstile-loader" />
+                  <span>Verification is still loading. Please try again in a moment.</span>
+                </div>
+              )}
+
               <Turnstile
                 ref={turnstileRef}
                 key={turnstileKey}
@@ -370,20 +390,21 @@ export const ContactSection: React.FC = () => {
                   background: 'transparent',
                   border: 'none',
                   borderRadius: '0',
-                  cursor: status === 'submitting' || turnstileToken !== null ? 'default' : 'pointer',
-                  opacity: status === 'submitting' ? 0.8 : 1,
+                  cursor: !turnstileReady || status === 'submitting' || turnstileToken !== null ? 'not-allowed' : 'pointer',
+                  opacity: isVerificationLoading ? 0.7 : 1,
+                  pointerEvents: isVerificationLoading ? 'none' : 'auto',
                 }}
               >
                 <input
                   type="checkbox"
                   checked={Boolean(turnstileToken)}
                   onChange={handleVerifyHuman}
-                  disabled={status === 'submitting' || turnstileToken !== null}
+                  disabled={!turnstileReady || status === 'submitting' || turnstileToken !== null}
                   style={{
                     width: '18px',
                     height: '18px',
                     accentColor: 'var(--color-old-rose)',
-                    cursor: status === 'submitting' || turnstileToken !== null ? 'default' : 'pointer',
+                    cursor: !turnstileReady || status === 'submitting' || turnstileToken !== null ? 'not-allowed' : 'pointer',
                   }}
                 />
                 <span style={{
@@ -397,7 +418,7 @@ export const ContactSection: React.FC = () => {
                   textTransform: 'none',
                   letterSpacing: '0.02em',
                 }}>
-                  I am human
+                  {isVerificationLoading ? 'Loading...' : turnstileToken ? 'Verified' : 'I am human'}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
@@ -421,7 +442,12 @@ export const ContactSection: React.FC = () => {
                 type="submit"
                 disabled={status === 'submitting' || !turnstileToken}
                 className="retro-btn"
-                style={{ width: '100%', marginTop: '6px' }}
+                style={{
+                  width: '100%',
+                  marginTop: '6px',
+                  cursor: !turnstileToken ? 'not-allowed' : 'pointer',
+                  opacity: !turnstileToken ? 0.65 : 1,
+                }}
               >
                 <Send size={16} />
                 <span>{status === 'submitting' ? 'Transmitting...' : 'Send Message'}</span>
@@ -447,6 +473,19 @@ export const ContactSection: React.FC = () => {
 
         .retro-checkbox-wrap:hover {
           transform: translateY(-1px);
+        }
+
+        .turnstile-loader {
+          animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+          from {
+            transform: rotate(0deg);
+          }
+          to {
+            transform: rotate(360deg);
+          }
         }
 
         @media (min-width: 820px) {
