@@ -2,12 +2,15 @@
 import { Mail, Copy, Check, Send, Sparkles, Shield, Clock, MapPin } from 'lucide-react';
 import { PORTFOLIO_INFO } from '../data/portfolioData';
 import { soundEngine } from '../utils/audio';
+import { Turnstile } from '@marsidev/react-turnstile';
 
 export const ContactSection: React.FC = () => {
   const [copied, setCopied] = useState(false);
   const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [turnstileKey, setTurnstileKey] = useState(0);
 
   const handleCopyEmail = () => {
     soundEngine.playSparkle();
@@ -18,6 +21,13 @@ export const ContactSection: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!turnstileToken) {
+      setStatus('error');
+      setErrorMessage('Please complete the spam verification.');
+      return;
+    }
+
     if (!formData.name || !formData.email || !formData.message) return;
 
     soundEngine.playClick(800, 0.05);
@@ -35,10 +45,15 @@ export const ContactSection: React.FC = () => {
           email: formData.email,
           subject: formData.subject,
           message: formData.message,
+          turnstileToken,
         }),
       });
 
-      const result = await response.json().catch(() => ({ success: false }));
+      const result = await response.json().catch(() => ({ success: false })) as {
+        success: boolean;
+        error?: string;
+        message?: string;
+      };
 
       if (!response.ok || !result.success) {
         throw new Error(result.error || 'Unable to send message right now.');
@@ -47,6 +62,11 @@ export const ContactSection: React.FC = () => {
       soundEngine.playSparkle();
       setStatus('success');
       setFormData({ name: '', email: '', subject: '', message: '' });
+
+      // Reset Turnstile after successful submission
+      setTurnstileToken(null);
+      setTurnstileKey((key) => key + 1);
+
       setTimeout(() => setStatus('idle'), 4000);
     } catch (error) {
       setStatus('error');
@@ -298,9 +318,21 @@ export const ContactSection: React.FC = () => {
                 </div>
               )}
 
+              <Turnstile
+                key={turnstileKey}
+                siteKey={import.meta.env.VITE_TURNSTILE_SITE_KEY}
+                onSuccess={(token) => {
+                  setTurnstileToken(token);
+                  setErrorMessage('');
+                  setStatus('idle');
+                }}
+                onExpire={() => setTurnstileToken(null)}
+                onError={() => setTurnstileToken(null)}
+              />
+
               <button
                 type="submit"
-                disabled={status === 'submitting'}
+                disabled={status === 'submitting' || !turnstileToken}
                 className="retro-btn"
                 style={{ width: '100%', marginTop: '6px' }}
               >

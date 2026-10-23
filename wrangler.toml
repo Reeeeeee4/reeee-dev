@@ -1,4 +1,5 @@
 name = "reeee-dev"
+main = "src/index.ts"
 compatibility_date = "2025-10-23"
 
 [[d1_databases]]
@@ -8,3 +9,5 @@ database_id = "b5d9fee3-0d18-4189-b23c-bb8dc92d9db2"
 
 [assets]
 directory = "./dist"
+binding = "ASSETS"
+run_worker_first = ["/api/*"]
