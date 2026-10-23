@@ -1,5 +1,5 @@
 ﻿import React, { useRef, useState } from 'react';
-import { Mail, Copy, Check, Send, Sparkles, Shield, Clock, MapPin, LoaderCircle } from 'lucide-react';
+import { Copy, Check, Send, Sparkles, Shield, Clock, MapPin, LoaderCircle } from 'lucide-react';
 import { PORTFOLIO_INFO } from '../data/portfolioData';
 import { soundEngine } from '../utils/audio';
 import { Turnstile } from '@marsidev/react-turnstile';
